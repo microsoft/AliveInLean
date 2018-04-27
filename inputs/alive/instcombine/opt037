@@ -1,0 +1,7 @@
+Name: AndOrXor:1395
+  %nop0 = sext i1 %a to i4
+  %op0 = xor i4 %nop0, -1
+  %r = and i4 %op0, %b
+=>
+  %r = select i1 %a, i4 0, i4 %b
+

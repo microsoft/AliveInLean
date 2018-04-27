@@ -1,0 +1,4 @@
+builtin_path
+path _target/deps/mathlib/.
+path _target/deps/smt2_interface/src
+path ./.

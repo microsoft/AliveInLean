@@ -1,0 +1,8 @@
+Name: Select:962
+  %s1 = add i4 %x, %y
+  %s2 = add i4 %x, %z
+  %r = select i1 %c, i4 %s1, i4 %s2
+=>
+  %yz = select i1 %c, i4 %y, i4 %z
+  %r = add i4 %x, %yz
+

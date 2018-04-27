@@ -1,0 +1,8 @@
+Name: 276-2
+  %div = udiv i5 %X, %Y
+  %negY = sub i5 0, %Y
+  %r = mul i5 %div, %negY
+=>
+  %rem = urem i5 %X, %Y
+  %r = sub i5 %rem, %X
+

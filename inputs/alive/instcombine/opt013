@@ -1,0 +1,5 @@
+Name: AddSub:1560
+  %r = sub i9 -1, %a
+=>
+  %r = xor i9 %a, -1
+

@@ -1,0 +1,6 @@
+Name: SimplifyDivRemOfSelect
+  %sel = select i1 %c, i4 %Y, i4 0
+  %r = udiv i4 %X, %sel
+=>
+  %r = udiv i4 %X, %Y
+

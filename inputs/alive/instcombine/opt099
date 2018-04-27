@@ -1,0 +1,7 @@
+Name: 820
+  %Z = srem i9 %X, %Op1
+  %Op0 = sub i9 %X, %Z
+  %r = sdiv i9 %Op0, %Op1
+=>
+  %r = sdiv i9 %X, %Op1
+

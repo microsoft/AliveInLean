@@ -1,0 +1,8 @@
+Name: AndOrXor:2321-3
+  %op0 = trunc i10 %A to i9
+  %op1 = trunc i10 %B to i9
+  %r = or i9 %op0, %op1
+=>
+  %or = or i10 %A, %B
+  %r = trunc i10 %or to i9
+

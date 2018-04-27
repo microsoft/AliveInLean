@@ -1,0 +1,9 @@
+Name: 70
+  %cmp1 = icmp sge i1 %V1, %_C
+  %cmp2 = icmp sge i1 %V2, %_C
+  %and = and i1 %cmp1, %cmp2
+=>
+  %or = or i1 %V1, %V2
+  %and = icmp sge i1 %or, %_C
+  %cmp = and i1 %and, %or
+

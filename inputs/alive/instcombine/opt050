@@ -1,0 +1,8 @@
+Name: AndOrXor:2231  (A ^ B) | ((B ^ C) ^ A) -> (A ^ B) | C
+  %op0 = xor i4 %A, %B
+  %x = xor i4 %B, %C
+  %op1 = xor i4 %x, %A
+  %r = or i4 %op0, %op1
+=>
+  %r = or i4 %op0, %C
+

@@ -1,0 +1,8 @@
+Name: add4
+  %or = or i9 %y, %x
+  %shl = shl i9 %or, 1
+  %xor = xor i9 %y, %x
+  %add = sub i9 %shl, %xor
+=>
+  %add = add i9 %x, %y
+

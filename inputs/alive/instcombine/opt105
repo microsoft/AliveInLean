@@ -1,0 +1,5 @@
+Name: 1030
+  %r = sdiv i9 %X, -1
+=>
+  %r = sub i9 0, %X
+

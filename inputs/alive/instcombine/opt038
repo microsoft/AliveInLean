@@ -1,0 +1,9 @@
+Name: AndOrXor:1574
+  %A = sext i1 %Cond to i4
+  %D = xor i4 %A, -1
+  %a1 = and i4 %A, %C
+  %a2 = and i4 %B, %D
+  %r = or i4 %a1, %a2
+=>
+  %r = select i1 %Cond, i4 %C, i4 %B
+

@@ -1,0 +1,6 @@
+Name: AddSub:1546
+  %na = sub nsw i4 0, %a
+  %r = sub nsw i4 %x, %na
+=>
+  %r = add nsw i4 %x, %a
+

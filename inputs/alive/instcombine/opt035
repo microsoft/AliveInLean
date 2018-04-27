@@ -1,0 +1,8 @@
+Name: AndOrXor:1346 (trunc)
+  %op0 = trunc i10 %x to i9
+  %op1 = trunc i10 %y to i9
+  %r = and i9 %op0, %op1
+=>
+  %0 = and i10 %x, %y
+  %r = trunc i10 %0 to i9
+

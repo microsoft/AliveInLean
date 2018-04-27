@@ -1,0 +1,6 @@
+Name: AddSub:1614
+  %Op1 = add i4 %X, %Y
+  %r = sub i4 %X, %Op1
+=>
+  %r = sub i4 0, %Y
+

@@ -1,0 +1,10 @@
+Name: Select:740
+  %c = icmp sgt i9 %A, 0
+  %minus = sub i9 0, %A
+  %abs = select i1 %c, i9 %A, i9 %minus
+  %c2 = icmp sgt i9 %abs, -1
+  %minus2 = sub i9 0, %abs
+  %abs2 = select i1 %c2, i9 %abs, i9 %minus2
+=>
+  %abs2 = select i1 %c, i9 %A, i9 %minus
+

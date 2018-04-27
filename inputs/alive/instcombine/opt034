@@ -1,0 +1,8 @@
+Name: AndOrXor:1346 (zext)
+  %op0 = zext i3 %x to i9
+  %op1 = zext i3 %y to i9
+  %r = and i9 %op0, %op1
+=>
+  %0 = and i3 %x, %y
+  %r = zext i3 %0 to i9
+

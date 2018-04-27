@@ -1,0 +1,5 @@
+Name: 152
+  %r = mul i9 %x, -1
+=>
+  %r = sub i9 0, %x
+

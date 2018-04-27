@@ -1,0 +1,8 @@
+Name: AndOrXor:1241 (A|B) & ~(A&B) => A^B
+  %op0 = or i9 %A, %B
+  %notOp1 = and i9 %A, %B
+  %op1 = xor i9 %notOp1, -1
+  %r = and i9 %op0, %op1
+=>
+  %r = xor i9 %A, %B
+

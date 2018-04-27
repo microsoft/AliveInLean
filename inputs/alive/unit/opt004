@@ -1,0 +1,7 @@
+Name: add1
+  %neg = xor i9 %y, -1
+  %sub = sub i9 %x, %neg
+  %add = sub i9 %sub, 1
+=>
+  %add = add i9 %x, %y
+

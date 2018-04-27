@@ -1,0 +1,8 @@
+Name: 976-exact
+  %Op0 = zext i4 %X to i9
+  %Op1 = zext i4 %Y to i9
+  %r = udiv exact i9 %Op0, %Op1
+=>
+  %d = udiv exact i4 %X, %Y
+  %r = zext i4 %d to i9
+

@@ -1,0 +1,5 @@
+Name: Select:851
+  %r = select i1 %a, i1 %b, i1 %a
+=>
+  %r = and i1 %a, %b
+

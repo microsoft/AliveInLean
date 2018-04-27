@@ -1,0 +1,8 @@
+Name: AndOrXor:2321-2
+  %op0 = sext i3 %A to i9
+  %op1 = sext i3 %B to i9
+  %r = or i9 %op0, %op1
+=>
+  %or = or i3 %A, %B
+  %r = sext i3 %or to i9
+

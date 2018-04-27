@@ -1,0 +1,5 @@
+Name: Select:852
+  %r = select i1 %a, i1 %a, i1 %b
+=>
+  %r = or i1 %a, %b
+

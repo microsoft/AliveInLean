@@ -1,0 +1,5 @@
+Name: 283
+  %r = mul i1 %X, %Y
+=>
+  %r = and i1 %X, %Y
+

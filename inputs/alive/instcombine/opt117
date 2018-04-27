@@ -1,0 +1,6 @@
+Name: Select:850
+  %A = select i1 %B, i1 false, i1 %C
+=>
+  %notb = xor i1 %B, true
+  %A = and i1 %notb, %C
+

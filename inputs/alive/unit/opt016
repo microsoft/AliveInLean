@@ -1,0 +1,6 @@
+Name: shift 4
+  %A = shl nsw i4 %x, 3
+  %B = ashr i4 %A, 1
+=>
+  %B = shl nsw i4 %x, 2
+

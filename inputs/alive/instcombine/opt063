@@ -1,0 +1,7 @@
+Name: AndOrXor:2367
+  %op0 = or i4 %A, %_C1
+  %r = or i4 %op0, %op1
+=>
+  %i = or i4 %A, %op1
+  %r = or i4 %i, %_C1
+

@@ -1,0 +1,7 @@
+Name: AndOrXor:1253 A & (A^B) -> A & ~B
+  %op0 = xor i9 %A, %B
+  %r = and i9 %op0, %A
+=>
+  %notB = xor i9 %B, -1
+  %r = and i9 %A, %notB
+

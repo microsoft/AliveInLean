@@ -1,0 +1,8 @@
+Name: AndOrXor:827
+  %op0 = icmp eq i4 %a, 0
+  %op1 = icmp eq i4 %b, 0
+  %r = and i1 %op0, %op1
+=>
+  %o = or i4 %a, %b
+  %r = icmp eq i4 %o, 0
+

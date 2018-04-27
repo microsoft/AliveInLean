@@ -1,0 +1,7 @@
+Name: AddSub:1624
+  %Op0 = or i4 %A, %B
+  %Op1 = xor i4 %A, %B
+  %r = sub i4 %Op0, %Op1
+=>
+  %r = and i4 %A, %B
+

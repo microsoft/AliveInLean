@@ -1,0 +1,8 @@
+Name: AndOrXor:2417
+  %x = xor i9 %nx, -1
+  %op0 = or i9 %x, %y
+  %r = xor i9 %op0, -1
+=>
+  %ny = xor i9 %y, -1
+  %r = and i9 %nx, %ny
+

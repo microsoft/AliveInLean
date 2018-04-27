@@ -1,0 +1,6 @@
+Name: 1298
+  %r = urem i4 1, %Op1
+=>
+  %cmp = icmp ne i4 %Op1, 1
+  %r = zext i1 %cmp to i4
+

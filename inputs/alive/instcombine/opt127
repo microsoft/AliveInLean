@@ -1,0 +1,6 @@
+Name: Select:883
+  %r = select i1 %c, i4 0, i4 -1
+=>
+  %notc = xor i1 %c, -1
+  %r = sext i1 %notc to i4
+

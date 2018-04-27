@@ -1,0 +1,8 @@
+Name: AndOrXor:2321-1
+  %op0 = zext i3 %A to i9
+  %op1 = zext i3 %B to i9
+  %r = or i9 %op0, %op1
+=>
+  %or = or i3 %A, %B
+  %r = zext i3 %or to i9
+

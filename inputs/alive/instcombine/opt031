@@ -1,0 +1,9 @@
+Name: AndOrXor:1288 (A ^ B) & ((B ^ C) ^ A) -> (A ^ B) & ~C
+  %op0 = xor i9 %A, %B
+  %x = xor i9 %B, %C
+  %op1 = xor i9 %x, %A
+  %r = and i9 %op0, %op1
+=>
+  %negC = xor i9 %C, -1
+  %r = and i9 %op0, %negC
+

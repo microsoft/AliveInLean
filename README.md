@@ -1,3 +1,81 @@
+# alive_in_lean
+
+## Setup
+
+- Please download Nighty Windows from https://leanprover.github.io/download/
+- Extract it, and update PATH environmental variable so command `lean` can be executed on the command prompt
+- Download & install z3 from https://github.com/Z3Prover/z3 and update PATH so `z3` can be executed as well
+- Run `leanpkg upgrade` to install SMT lib interface and mathlib
+- NOTE: `leanpkg build` may fail, due to several yet incomplete files in submodules
+
+
+## Run
+
+```
+# Runs selected tests from Alive's test suite (which contain
+# no precondition and do not require additional grammars)
+./run-alive.sh
+```
+
+```
+# Runs random testings for specification of Z3 expression -
+# concrete value, as well as 4 admitted arithmetic lemmas.
+# Note that bv_equiv.zext/sext/trunc will have 'omitted' tests
+# because sometimes generated expressions try to compare
+# bitvectors with different bitwidths.
+./run-proptest.sh
+```
+
+More test scripts are in `scripts/`.
+
+
+## Theorems
+
+- Specification, as well as proof, is in `src/spec/`.
+
+1. Execution of `bigstep_exe` with two different value semantics (SMT expr / concrete value)
+has some good relations.
+
+```
+def encode (ss:irstate_smt) (se:irstate_exec) (η:freevar.env) :=
+    irstate_equiv (η⟦ss⟧) se
+
+def bigstep_both:= ∀ ss se (p:program) oss' ose' η
+    (HENC:encode ss se η)
+    (HOSS': oss' = bigstep_exe irsem_smt ss p)
+    (HOSE': ose' = bigstep_exe irsem_exec se p),
+  none_or_some oss' ose' (λ ss' se', encode ss' se' η)
+-- Its proof is at equiv.lean
+```
+
+2. We can generate initial state correctly:
+
+```
+def init_state_encode:= ∀ (freevars:list (string × ty)) (sg sg':std_gen) ise iss
+    (HUNQ: list.unique $ freevars.map prod.fst)
+    (HIE:(ise, sg') = create_init_state_exec freevars sg)
+    (HIS:iss = create_init_state_smt freevars),
+  ∃ η, encode iss ise η
+-- Its proof is at initialstate.lean
+```
+
+3. If refinement checking function `check_single_reg0` says it's true, refinement
+indeed holds.
+
+```
+def refines_single_reg_correct := ∀ (psrc ptgt:program)
+    (root:string) (ss0:irstate_smt) sb
+    (HSREF:some sb = check_single_reg0 irsem_smt psrc ptgt root ss0)
+    (HEQ:∀ (η0:freevar.env) e, b_equiv (η0⟦sb⟧) e → e = tt),
+  root_refines_smt psrc ptgt ss0 root
+-- Its proof is at refinement.lean
+```
+
+- TODO:
+    - Connect this with `check_single_reg`, which allows a target program to
+      use definitions in the source program for convenience.
+    - Check that `freevars.get` correctly returns all free variables.
+    - Connect this with correctness criteria in Alive paper
 
 # Contributing
 

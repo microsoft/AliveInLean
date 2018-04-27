@@ -1,0 +1,8 @@
+Name: 976
+  %Op0 = zext i3 %X to i9
+  %Op1 = zext i3 %Y to i9
+  %r = udiv i9 %Op0, %Op1
+=>
+  %d = udiv i3 %X, %Y
+  %r = zext i3 %d to i9
+

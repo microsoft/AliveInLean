@@ -1,0 +1,8 @@
+Name: Select:700
+  %c = icmp slt i4 %A, %B
+  %smin = select i1 %c, i4 %A, i4 %B
+  %c2 = icmp slt i4 %smin, %B
+  %smin2 = select i1 %c2, i4 %smin, i4 %B
+=>
+  %smin2 = select i1 %c, i4 %A, i4 %B
+

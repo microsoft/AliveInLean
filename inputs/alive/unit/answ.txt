@@ -1,0 +1,19 @@
+ERROR: Target is more poisonous than Source for i4 %A
+Optimization is correct!
+Optimization is correct!
+Optimization is correct!
+Optimization is correct!
+Optimization is correct!
+Optimization is correct!
+ERROR: Target is more poisonous than Source for i4 %C
+ERROR: Domain of definedness of Target is smaller than Source's for i4 %r
+ERROR: Target is more poisonous than Source for i2 %r
+ERROR: Target is more poisonous than Source for i4 %r
+ERROR: Target is more poisonous than Source for i2 %15
+Optimization is correct!
+Optimization is correct!
+Optimization is correct!
+Optimization is correct!
+Optimization is correct!
+ERROR: Temporary register %cmp unused and does not overwrite any Source register
+ERROR: Temporary register %x unused and not overwritten

@@ -1,0 +1,7 @@
+Name: 2
+  %aab = and i4 %a, %b
+  %aob = xor i4 %a, %b
+  %c = add i4 %aab, %aob
+=>
+  %c = or i4 %a, %b
+

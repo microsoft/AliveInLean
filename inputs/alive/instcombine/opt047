@@ -1,0 +1,7 @@
+Name: AndOrXor:2118   ((A & B) | ~A) -> (~A | B)
+  %negA = xor i9 %A, -1
+  %op0 = and i9 %A, %B
+  %r = or i9 %op0, %negA
+=>
+  %r = or i9 %negA, %B
+

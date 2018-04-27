@@ -1,0 +1,6 @@
+Name: shift 1
+  %sh = shl nsw i17 1, %b
+  %mul = mul nsw i17 %a, %sh
+=>
+  %mul = shl nsw i17 %a, %b
+

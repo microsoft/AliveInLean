@@ -1,0 +1,8 @@
+Name: AndOrXor:2459-2
+  %cmp = icmp slt i4 %x, %y
+  %op0 = sext i1 %cmp to i11
+  %r = xor i11 %op0, -1
+=>
+  %ncmp = icmp sge i4 %x, %y
+  %r = sext i1 %ncmp to i11
+

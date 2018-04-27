@@ -1,0 +1,5 @@
+Name: Select:873
+  %r = select i1 %_C, i4 -1, i4 0
+=>
+  %r = sext i1 %_C to i4
+

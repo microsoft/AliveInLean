@@ -1,0 +1,6 @@
+Name: 891-exact
+  %s = shl i13 1, %N
+  %r = udiv exact i13 %x, %s
+=>
+  %r = lshr exact i13 %x, %N
+

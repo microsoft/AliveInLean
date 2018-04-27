@@ -1,0 +1,14 @@
+Name: big shift
+  %tmp4 = trunc i9 %a0 to i8
+  %tmp5 = shl i8 %tmp4, 5
+  %tmp48 = and i8 %tmp5, 32
+  %tmp49 = lshr i8 %tmp48, 5
+  %tmp50 = mul i8 %tmp49, 64
+  %tmp51 = xor i8 %tmp50, %tmp5
+  %tmp52 = and i8 %tmp51, -128
+  %tmp53 = lshr i8 %tmp52, 7
+  %tmp54 = mul i8 %tmp53, 16
+=>
+  %0 = shl i8 %tmp4, 2
+  %tmp54 = and i8 %0, 16
+

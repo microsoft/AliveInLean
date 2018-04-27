@@ -1,0 +1,5 @@
+Name: 1
+  %A = add i4 %x, %y
+=>
+  %A = add nsw i4 %x, %y
+

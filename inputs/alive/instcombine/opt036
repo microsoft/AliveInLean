@@ -1,0 +1,6 @@
+Name: AndOrXor:1388
+  %op0 = sext i1 %a to i9
+  %r = and i9 %op0, %b
+=>
+  %r = select i1 %a, i9 %b, i9 0
+

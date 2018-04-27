@@ -1,0 +1,6 @@
+Name: Select:637
+  %c = icmp eq i4 %X, %_C
+  %r = select i1 %c, i4 %X, i4 %Y
+=>
+  %r = select i1 %c, i4 %_C, i4 %Y
+

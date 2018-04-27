@@ -1,0 +1,7 @@
+Name: 239
+  %a = sub i4 0, %X
+  %b = sub i4 0, %Y
+  %r = mul i4 %a, %b
+=>
+  %r = mul i4 %X, %Y
+

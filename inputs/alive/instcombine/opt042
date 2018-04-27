@@ -1,0 +1,7 @@
+Name: AndOrXor:1683-1
+  %op0 = icmp ugt i4 %a, %b
+  %op1 = icmp eq i4 %a, %b
+  %r = or i1 %op0, %op1
+=>
+  %r = icmp uge i4 %a, %b
+

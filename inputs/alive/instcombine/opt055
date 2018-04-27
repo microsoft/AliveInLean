@@ -1,0 +1,7 @@
+Name: AndOrXor:2265
+  %op0 = and i4 %A, %B
+  %op1 = xor i4 %A, %B
+  %r = or i4 %op0, %op1
+=>
+  %r = or i4 %A, %B
+

@@ -1,0 +1,7 @@
+Name: 266
+  %div = udiv exact i4 %X, %Y
+  %negY = sub i4 0, %Y
+  %r = mul i4 %div, %negY
+=>
+  %r = sub i4 0, %X
+

@@ -1,0 +1,6 @@
+Name: 71
+  %x = add i3 3, 4
+  %y = add i4 0, 3
+=>
+  %y = add i4 1, 2
+

@@ -1,0 +1,7 @@
+Name: AndOrXor:2587  (B&A)^A -> ~B & A
+  %op0 = and i9 %a, %op1
+  %r = xor i9 %op0, %op1
+=>
+  %na = xor i9 %a, -1
+  %r = and i9 %na, %op1
+

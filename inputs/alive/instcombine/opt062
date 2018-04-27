@@ -1,0 +1,6 @@
+Name: AndOrXor:2356
+  %op0 = sext i1 %A to i4
+  %r = or i4 %op0, %op1
+=>
+  %r = select i1 %A, i4 -1, i4 %op1
+

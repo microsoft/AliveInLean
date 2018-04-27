@@ -1,0 +1,6 @@
+Name: Select:641
+  %c = icmp ne i4 %X, %_C
+  %r = select i1 %c, i4 %Y, i4 %X
+=>
+  %r = select i1 %c, i4 %Y, i4 %_C
+

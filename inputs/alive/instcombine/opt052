@@ -1,0 +1,8 @@
+Name: AndOrXor:2247  (~A | ~B) == (~(A & B))
+  %na = xor i9 %A, -1
+  %nb = xor i9 %B, -1
+  %r = or i9 %na, %nb
+=>
+  %a = and i9 %A, %B
+  %r = xor i9 %a, -1
+

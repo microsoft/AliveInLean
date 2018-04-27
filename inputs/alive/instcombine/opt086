@@ -1,0 +1,8 @@
+Name: 229
+  %Op0 = add i4 %X, %_C1
+  %r = mul i4 %Op0, %Op1
+=>
+  %mul = mul i4 %_C1, %Op1
+  %tmp = mul i4 %X, %Op1
+  %r = add i4 %tmp, %mul
+

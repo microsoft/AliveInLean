@@ -1,0 +1,6 @@
+Name: 809
+  %r = udiv i4 1, %X
+=>
+  %c = icmp eq i4 %X, 1
+  %r = zext i1 %c to i4
+

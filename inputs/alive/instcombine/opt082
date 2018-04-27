@@ -1,0 +1,8 @@
+Name: AndOrXor:2681-1
+  %op0 = zext i3 %a to i9
+  %op1 = zext i3 %b to i9
+  %r = xor i9 %op0, %op1
+=>
+  %0 = xor i3 %a, %b
+  %r = zext i3 %0 to i9
+

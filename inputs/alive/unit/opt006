@@ -1,0 +1,7 @@
+Name: add3
+  %or = or i4 %y, %x
+  %and = and i4 %y, %x
+  %add = add i4 %or, %and
+=>
+  %add = add i4 %x, %y
+

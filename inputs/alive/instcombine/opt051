@@ -1,0 +1,8 @@
+Name: AndOrXor:2243  ((B | C) & A) | B -> B | (A & C)
+  %o = or i4 %B, %C
+  %op0 = and i4 %o, %A
+  %r = or i4 %op0, %B
+=>
+  %a = and i4 %A, %C
+  %r = or i4 %B, %a
+

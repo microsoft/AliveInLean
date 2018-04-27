@@ -1,0 +1,9 @@
+Name: AndOrXor:2617
+  %na = xor i9 %a, -1
+  %nb = xor i9 %b, -1
+  %op0 = and i9 %a, %nb
+  %op1 = and i9 %na, %b
+  %r = xor i9 %op0, %op1
+=>
+  %r = xor i9 %a, %b
+

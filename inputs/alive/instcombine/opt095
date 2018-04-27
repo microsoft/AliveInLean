@@ -1,0 +1,6 @@
+Name: 290 & 292
+  %Op0 = shl i9 1, %Y
+  %r = mul i9 %Op0, %Op1
+=>
+  %r = shl i9 %Op1, %Y
+

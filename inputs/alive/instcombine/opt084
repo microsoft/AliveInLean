@@ -1,0 +1,8 @@
+Name: AndOrXor:2681-3
+  %op0 = trunc i10 %a to i9
+  %op1 = trunc i10 %b to i9
+  %r = xor i9 %op0, %op1
+=>
+  %0 = xor i10 %a, %b
+  %r = trunc i10 %0 to i9
+

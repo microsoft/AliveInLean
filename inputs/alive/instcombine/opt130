@@ -1,0 +1,9 @@
+Name: Select:967b
+  %sum = sub i9 %x, %y
+  %dif = add i9 %x, %y
+  %r = select i1 %c, i9 %sum, i9 %dif
+=>
+  %neg = sub i9 0, %y
+  %sel = select i1 %c, i9 %neg, i9 %y
+  %r = add i9 %x, %sel
+

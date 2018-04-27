@@ -1,0 +1,6 @@
+Name: Select:858
+  %nota = xor i1 %a, -1
+  %r = select i1 %a, i1 %nota, i1 %b
+=>
+  %r = and i1 %nota, %b
+

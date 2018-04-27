@@ -1,0 +1,6 @@
+Name: 34
+  %B = sub i4 0, %A
+  %C = sub nsw i4 %x, %B
+=>
+  %C = add nsw i4 %x, %A
+

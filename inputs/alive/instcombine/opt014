@@ -1,0 +1,6 @@
+Name: AddSub:1582
+  %rhs = zext i1 %X to i9
+  %r = sub i9 0, %rhs
+=>
+  %r = sext i1 %X to i9
+

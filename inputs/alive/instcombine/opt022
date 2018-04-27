@@ -1,0 +1,7 @@
+Name: AndOrXor:794
+  %op0 = icmp sgt i4 %a, %b
+  %op1 = icmp ne i4 %a, %b
+  %r = and i1 %op0, %op1
+=>
+  %r = icmp sgt i4 %a, %b
+

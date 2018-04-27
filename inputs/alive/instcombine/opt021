@@ -1,0 +1,11 @@
+Name: AndOrXor:716
+  %a1 = and i4 %a, %b
+  %a2 = and i4 %a, %d
+  %op0 = icmp eq i4 %a1, %a
+  %op1 = icmp eq i4 %a2, %a
+  %r = and i1 %op0, %op1
+=>
+  %a4 = and i4 %b, %d
+  %a3 = and i4 %a, %a4
+  %r = icmp eq i4 %a3, %a
+

@@ -1,0 +1,8 @@
+Name: AndOrXor:1346 (sext)
+  %op0 = sext i3 %x to i9
+  %op1 = sext i3 %y to i9
+  %r = and i9 %op0, %op1
+=>
+  %0 = and i3 %x, %y
+  %r = sext i3 %0 to i9
+

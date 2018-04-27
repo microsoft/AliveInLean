@@ -1,0 +1,9 @@
+Name: AndOrXor:2375
+  %op0 = select i1 %x, i4 %A, i4 %B
+  %op1 = select i1 %x, i4 %C, i4 %D
+  %r = or i4 %op0, %op1
+=>
+  %t = or i4 %A, %C
+  %f = or i4 %B, %D
+  %r = select i1 %x, i4 %t, i4 %f
+

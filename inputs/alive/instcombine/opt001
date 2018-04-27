@@ -1,0 +1,7 @@
+Name: AddSub:1098
+  %ax = zext i1 %a to i4
+  %c = add i4 %ax, %b
+=>
+  %b1 = add i4 %b, 1
+  %c = select i1 %a, i4 %b1, i4 %b
+

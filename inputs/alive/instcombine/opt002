@@ -1,0 +1,5 @@
+Name: AddSub:1152
+  %r = add i1 %x, %y
+=>
+  %r = xor i1 %x, %y
+

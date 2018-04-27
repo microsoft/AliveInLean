@@ -1,0 +1,7 @@
+Name: 275-2
+  %div = sdiv i5 %X, %Y
+  %r = mul i5 %div, %Y
+=>
+  %rem = srem i5 %X, %Y
+  %r = sub i5 %X, %rem
+

@@ -1,0 +1,6 @@
+Name: Select:1078
+  %Y = select i1 %c, i4 %W, i4 %Z
+  %r = select i1 %c, i4 %X, i4 %Y
+=>
+  %r = select i1 %c, i4 %X, i4 %Z
+

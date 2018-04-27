@@ -1,0 +1,7 @@
+Name: AndOrXor:1191-1
+  %op0 = shl i4 1, %op0RHS
+  %r = and i4 %op0, 1
+=>
+  %newICMP = icmp eq i4 %op0RHS, 0
+  %r = zext i1 %newICMP to i4
+

@@ -1,0 +1,6 @@
+Name: AndOrXor:2453
+  %op0 = icmp slt i4 %x, %y
+  %r = xor i1 %op0, -1
+=>
+  %r = icmp sge i4 %x, %y
+

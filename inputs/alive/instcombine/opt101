@@ -1,0 +1,6 @@
+Name: 891
+  %s = shl i13 1, %N
+  %r = udiv i13 %x, %s
+=>
+  %r = lshr i13 %x, %N
+

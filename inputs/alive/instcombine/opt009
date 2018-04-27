@@ -1,0 +1,7 @@
+Name: AddSub:1309-3
+  %lhs = and i4 %a, %b
+  %rhs = or i4 %a, %b
+  %c = add nuw i4 %lhs, %rhs
+=>
+  %c = add nuw i4 %a, %b
+

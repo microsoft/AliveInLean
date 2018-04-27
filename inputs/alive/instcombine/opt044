@@ -1,0 +1,8 @@
+Name: AndOrXor:1705
+  %cmp1 = icmp eq i9 %B, 0
+  %cmp2 = icmp ugt i9 %B, %A
+  %r = or i1 %cmp1, %cmp2
+=>
+  %b1 = add i9 %B, -1
+  %r = icmp uge i9 %b1, %A
+

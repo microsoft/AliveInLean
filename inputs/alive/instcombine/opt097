@@ -1,0 +1,7 @@
+Name: 805
+  %r = sdiv i4 1, %X
+=>
+  %inc = add i4 %X, 1
+  %c = icmp ult i4 %inc, 3
+  %r = select i1 %c, i4 %X, i4 0
+

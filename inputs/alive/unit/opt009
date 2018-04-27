@@ -1,0 +1,6 @@
+Name: 39
+  %Op1 = sub i4 0, %X
+  %r = srem i4 %Op0, %Op1
+=>
+  %r = srem i4 %Op0, %X
+

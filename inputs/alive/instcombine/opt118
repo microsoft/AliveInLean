@@ -1,0 +1,5 @@
+Name: Select:855
+  %A = select i1 %B, i1 %C, i1 false
+=>
+  %A = and i1 %B, %C
+

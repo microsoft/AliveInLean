@@ -1,0 +1,8 @@
+Name: add2
+  %xor = xor i9 %y, %x
+  %and = and i9 %y, %x
+  %shl = shl i9 %and, 1
+  %add = add i9 %shl, %xor
+=>
+  %add = add i9 %x, %y
+

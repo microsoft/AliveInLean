@@ -1,0 +1,6 @@
+Name: shift 3
+  %A = shl nuw i4 %x, 1
+  %B = lshr i4 %A, 3
+=>
+  %B = lshr i4 %x, 2
+

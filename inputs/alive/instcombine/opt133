@@ -1,0 +1,6 @@
+Name: Select:1087
+  %c = xor i1 %val, true
+  %r = select i1 %c, i4 %X, i4 %Y
+=>
+  %r = select i1 %val, i4 %Y, i4 %X
+

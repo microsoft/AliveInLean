@@ -1,0 +1,8 @@
+Name: AndOrXor:2284
+  %o = or i9 %A, %B
+  %op1 = xor i9 %o, -1
+  %r = or i9 %A, %op1
+=>
+  %not = xor i9 %B, -1
+  %r = or i9 %A, %not
+

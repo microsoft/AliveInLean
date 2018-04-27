@@ -1,0 +1,7 @@
+Name: AndOrXor:2663
+  %op0 = icmp ule i4 %a, %b
+  %op1 = icmp ne i4 %a, %b
+  %r = xor i1 %op0, %op1
+=>
+  %r = icmp uge i4 %a, %b
+

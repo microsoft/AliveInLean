@@ -1,0 +1,8 @@
+Name: AndOrXor:1733
+  %cmp1 = icmp ne i4 %A, 0
+  %cmp2 = icmp ne i4 %B, 0
+  %r = or i1 %cmp1, %cmp2
+=>
+  %or = or i4 %A, %B
+  %r = icmp ne i4 %or, 0
+

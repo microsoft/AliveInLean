@@ -1,0 +1,6 @@
+Name: AddSub:1176
+  %nb = sub i4 0, %b
+  %c = add i4 %a, %nb
+=>
+  %c = sub i4 %a, %b
+
