@@ -1,24 +1,23 @@
-# alive_in_lean
+# AliveInLean
 
 ## Setup
 
-- Please download Nighty Windows from https://leanprover.github.io/download/
+- Download Lean 3.4.1 or later from https://leanprover.github.io/download/
 - Extract it, and update PATH environmental variable so command `lean` can be executed on the command prompt
 - Download & install z3 from https://github.com/Z3Prover/z3 and update PATH so `z3` can be executed as well
 - Run `leanpkg upgrade` to install SMT lib interface and mathlib
-- NOTE: `leanpkg build` may fail, due to several yet incomplete files in submodules
 
 
 ## Run
 
 ```
-# Runs selected tests from Alive's test suite (which contain
+# Run selected tests from Alive's test suite (which contain
 # no precondition and do not require additional grammars)
 ./run-alive.sh
 ```
 
 ```
-# Runs random testings for specification of Z3 expression -
+# Run random tests for the specification of Z3 expression -
 # concrete value, as well as 4 admitted arithmetic lemmas.
 # Note that bv_equiv.zext/sext/trunc will have 'omitted' tests
 # because sometimes generated expressions try to compare

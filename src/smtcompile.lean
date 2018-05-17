@@ -1,3 +1,6 @@
+-- Copyright (c) Microsoft Corporation. All rights reserved.
+-- Licensed under the MIT license.
+
 import .smtexpr
 import smt2.syntax
 import smt2.builder

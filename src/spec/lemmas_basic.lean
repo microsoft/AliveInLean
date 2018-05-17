@@ -1,3 +1,6 @@
+-- Copyright (c) Microsoft Corporation. All rights reserved.
+-- Licensed under the MIT license.
+
 universes u v
 -- Basic
 lemma prod_inj: ∀ {α:Type u} {β:Type v} (p q:α × β),

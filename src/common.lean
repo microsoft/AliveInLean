@@ -1,3 +1,6 @@
+-- Copyright (c) Microsoft Corporation. All rights reserved.
+-- Licensed under the MIT license.
+
 def size := { n:nat // 0 < n }
 
 namespace size
