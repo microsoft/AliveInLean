@@ -47,7 +47,7 @@ def bigstep_both:= ∀ ss se (p:program) oss' ose' η
 -- Its proof is at equiv.lean
 ```
 
-2. We can generate initial state correctly:
+2. We can generate initial state correctly.
 
 ```
 def init_state_encode:= ∀ (freevars:list (string × ty)) (sg sg':std_gen) ise iss
@@ -70,10 +70,10 @@ def refines_single_reg_correct := ∀ (psrc ptgt:program)
 -- Its proof is at refinement.lean
 ```
 
-- TODO:
+- TODO
     - Connect this with `check_single_reg`, which allows a target program to
-      use definitions in the source program for convenience.
-    - Check that `freevars.get` correctly returns all free variables.
+      use definitions in the source program for convenience
+    - Check that `freevars.get` correctly returns all free variables
     - Connect this with correctness criteria in Alive paper
 
 # Contributing
