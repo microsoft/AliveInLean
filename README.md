@@ -2,7 +2,7 @@
 
 ## Setup
 
-- Download Lean 3.4.1 or later from https://leanprover.github.io/download/
+- Download Lean 3.4.2 from https://leanprover.github.io/download/
 - Extract it, and update PATH environmental variable so command `lean` can be executed on the command prompt
 - Download & install z3 from https://github.com/Z3Prover/z3 and update PATH so `z3` can be executed as well
 - Run `leanpkg upgrade` to install SMT lib interface and mathlib

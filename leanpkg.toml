@@ -1,7 +1,7 @@
 [package]
 name = "alive_in_lean"
 version = "0.1"
-lean_version = "3.3.0"
+lean_version = "3.4.2"
 
 [dependencies]
 smt2_interface = {git = "https://github.com/leanprover/smt2_interface.git", rev = "985cf270aee985e632d78b12f82bca3ac35165f5"}
