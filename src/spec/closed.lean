@@ -312,7 +312,7 @@ lemma closed_regfile_update_split: ∀ {rf:regfile irsem_smt} {n} {v},
   }
 end
 
--- TODO 1: Merge closed_b_add_b and closed_bv_add_b in a single
+-- TODO 1: Merge closed_b_add_b and closed_bv_add_b into a single
 -- theorem (I tried merging them
 -- but it raised excessive memory consumption error.)
 -- TODO 2: closed_b_add_b, closed_b_add_bv, closed_bv_add_b,

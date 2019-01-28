@@ -48,7 +48,8 @@ meta def log {α:Type} [has_to_string α] (result_state:option α)
     return (some finalresult)
   end
 
--- Executes a program with two different semantics.
+-- Executes a program and check whether SMT formula generated
+-- from the program encodes the final state.
 meta def run_and_emit_smt2 (typedp:program) : io unit :=
   do
   let gen := mk_std_gen,
