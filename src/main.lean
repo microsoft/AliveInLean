@@ -36,8 +36,7 @@ meta def smt_emitter:vcgen.emitter irsem_smt :=
 -- Runs a single program.
 namespace singleprog
 
--- Runs bigstep with given semantics.
-meta def log {α:Type} [has_to_string α] (result_state:option α)
+meta def print_result {α:Type} [has_to_string α] (result_state:option α)
   : io (option α) :=
   match result_state with
   | none := do
@@ -58,10 +57,10 @@ meta def run_and_emit_smt2 (typedp:program) : io unit :=
   print_ln $ "free vars:" ++ to_string freevars,
   print_ln "=== Run-EXE ===",
   let (init_st, gen) := freevar.create_init_state_exec freevars gen,
-  final_st ← log (bigstep_exe irsem_exec init_st typedp),
+  final_st ← print_result (bigstep_exe irsem_exec init_st typedp),
   print_ln "=== Run-SMT ===",
   let init_st' := freevar.create_init_state_smt freevars,
-  final_st' ← log (bigstep_exe irsem_smt init_st' typedp),
+  final_st' ← print_result (bigstep_exe irsem_smt init_st' typedp),
 
   match final_st, final_st' with
   | (some final_st), (some final_st') :=

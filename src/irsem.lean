@@ -63,7 +63,7 @@ def regfile.regnames (r:regfile) : list string :=
 def regfile.to_string' [has_to_string valty] (rs:regfile) : string :=
   list.foldr
       (λ (itm:string × valty) (befst:string),
-          befst ++ "\n" ++ (itm.1) ++ ":" ++ (to_string itm.2))
+          befst ++ (itm.1) ++ ":" ++ (to_string itm.2) ++ ",\n")
       "" rs
 
 include ihc
@@ -109,7 +109,7 @@ def irstate.apply_to_values (f:valty → valty): irstate :=
 
 def irstate.to_string' [has_to_string valty] [has_to_string sem.poisonty] [has_to_string sem.boolty]
     : string :=
-    to_string ("Is not UB?: " ++ to_string(s.1), regfile.to_string' s.2)
+    "(Is not UB?: " ++ to_string(s.1) ++ ",\n" ++ regfile.to_string' s.2 ++ ")"
 end
 
 -- Get current value from syntactic val (either register or constant).

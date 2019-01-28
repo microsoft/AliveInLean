@@ -6,14 +6,14 @@ import .lang
 namespace const
   instance: has_to_string const :=
   ⟨λ a, match a with
-      | (const.int n) := "(int " ++ to_string n ++ ")"
+      | (const.int n) := to_string n --"(int " ++ to_string n ++ ")"
       end⟩
 end const
 
 namespace reg
   instance: has_to_string reg :=
   ⟨λ r, match r with
-    | (reg.r name) := "(reg " ++ name ++ ")"
+    | (reg.r name) := name --"(reg " ++ name ++ ")"
     end⟩
 end reg
 
@@ -56,7 +56,7 @@ namespace instruction
       (to_string bop) ++
       (list.foldl (λ s1 f, s1 ++ " " ++ to_string f) "" flags) ++ " " ++
       (to_string lhsty) ++ " " ++
-      (to_string op1) ++ " " ++ (to_string op2)
+      (to_string op1) ++ ", " ++ (to_string op2)
     | (instruction.unaryop lhs uop fromty op toty) :=
       (to_string lhs) ++ " = " ++ (to_string uop) ++ " " ++ 
       (match uop with
@@ -64,9 +64,9 @@ namespace instruction
       | _ := (to_string fromty) ++ " " ++ (to_string op) ++
           " to " ++ (to_string toty)
       end)
-    | (instruction.icmpop lhsty lhs cond op1 op2) :=
+    | (instruction.icmpop opty lhs cond op1 op2) :=
       (to_string lhs) ++ " = icmp " ++ (to_string cond) ++ " " ++
-      (to_string lhsty) ++ " " ++ (to_string op1) ++ (to_string op2)
+      (to_string opty) ++ " " ++ (to_string op1) ++ ", " ++ (to_string op2)
     | (instruction.selectop lhs condty cond opty op1 op2) :=
       (to_string lhs) ++ " = select " ++ (to_string condty) ++ " " ++
       (to_string cond) ++ ", " ++ (to_string opty) ++ " " ++ (to_string op1) ++

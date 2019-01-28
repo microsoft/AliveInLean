@@ -37,7 +37,7 @@ namespace irsem_exec
   instance valty_tostr: has_to_string irsem_exec.valty :=
   ⟨λ b, match b with
   | (irsem.valty.ival sz b p) := has_to_string.to_string (b.1) ++
-      ", IS_NOT_POISON:" ++ to_string p
+      ", poison:" ++ to_string (~p)
   end⟩
   instance boolty_tostr: has_to_string irsem_exec.boolty :=
   ⟨λ b:bool, to_string b⟩
