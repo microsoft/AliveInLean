@@ -13,6 +13,18 @@ lemma prod_inj: ∀ {α:Type u} {β:Type v} (p q:α × β),
     cases H with H1 H2, rw [H1, H2] }
 end
 
+lemma ite_or:
+  ∀ {α:Type} {c} {x y z:α} (HDEC:decidable c)
+    (HITE:x = @ite c HDEC α y z),
+  x = y ∨ x = z
+:= begin
+  intros,
+  cases HDEC,
+  { rw if_neg at HITE, right, assumption, assumption },
+  { rw if_pos at HITE, left, assumption, assumption }
+end
+
+
 -- Arithmetic operations
 
 lemma nat.pow_mul_pow: ∀ (m n:ℕ),

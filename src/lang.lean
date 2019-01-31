@@ -33,7 +33,7 @@ inductive bopcode : Type
 instance : decidable_eq bopcode :=
 by tactic.mk_dec_eq_instance
 -- Returns true if given bopcode is div or rem
-@[reducible]
+@[reducible, simp]
 def bop_isdiv : bopcode → bool
 | bopcode.udiv := tt
 | bopcode.urem := tt
