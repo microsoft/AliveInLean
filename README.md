@@ -25,6 +25,12 @@
 ./run-proptest.sh
 ```
 
+```
+# Run random tests for the specification of LLVM assembly language.
+# Set clang path to yours by modifying the script.
+./run-irtest.sh
+```
+
 More test scripts are in `scripts/`.
 
 
