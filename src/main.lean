@@ -149,7 +149,8 @@ meta def check_one (t:transformation) (n:nat) (verbose:bool): io unit := do
       z3i ← z3_instance.start,
       smtres ← z3_instance.raw z3i smtcode.to_string,
       debug_ln (smtres ++ "(Unsat means the opt. is correct)"),
-      if smtres = "unsat" then
+      debug_ln "",
+      if smtres = "unsat\n" then
         print_ln "Correct"
       else
         print_ln "Incorrect"
@@ -174,7 +175,7 @@ meta def check (filename:string) (parseonly:bool) (verbose:bool): io unit := do
 
     else do
       _ ← monad.foldl (λ n tf, do
-        check_one tf n verbose, print_ln "", return (n+1)) 1 tfs,
+        check_one tf n verbose, return (n+1)) 1 tfs,
       return ()
   end
 
