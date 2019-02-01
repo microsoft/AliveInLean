@@ -2,8 +2,7 @@ for i in "inputs/alive/instcombine" "inputs/alive/unit"; do
 	echo "Running ${i}/*.opt .."
 	find ${i} -name "opt*" -print0 | sort -z | xargs --null cat > ${i}/all.opt
 	lean -q --run src/main.lean -verifyopt ${i}/all.opt > output.txt
-	grep -E '^sat$|^unsat$' output.txt > output_summarized.txt
-	python3 check_diff.py output_summarized.txt ${i}/answ.txt
+	python3 check_diff.py output.txt ${i}/answ.txt
 	rm ${i}/all.opt
 	echo
 done

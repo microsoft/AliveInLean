@@ -4,11 +4,11 @@ import sys
 def matches(s1, s2):
 	s1 = s1.strip()
 	s2 = s2.strip()
-	if s1 != "sat" and s1 != "unsat":
+	if s1 != "Correct" and s1 != "Incorrect":
 		# Unknown output.
 		return 0
-	if (s1 == "unsat" and s2 == "Optimization is correct!") or \
-	   (s1 == "sat" and s2.startswith("ERROR:")):
+	if (s1 == "Correct" and s2 == "Optimization is correct!") or \
+	   (s1 == "Incorrect" and s2.startswith("ERROR:")):
 		# Correct.
 		return 1
 	# Incorrect!

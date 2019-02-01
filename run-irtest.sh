@@ -1,5 +1,5 @@
 # of testing
-n=10000
+n=5000
 # clang path
 clang=~/clang-7.0.1/bin/clang
 # verbosity, replace n with y if want the script to be verbose
