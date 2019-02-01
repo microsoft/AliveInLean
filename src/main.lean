@@ -118,8 +118,10 @@ def root_name (p:program): string :=
   | (instruction.unaryop (reg.r r) _ _ _ _)::_ := r
   end
 
-meta def check_one (t:transformation) (n:nat): io unit := do
-  print_ln format!"--------{t.name}-------{n}--",
+meta def check_one (t:transformation) (n:nat) (verbose:bool): io unit := do
+  let debug_ln (str:format) :=
+    if verbose then print_ln str else return (),
+  debug_ln format!"--------{t.name}-------{n}--",
   let (lp1, lp2) := (concretize_type t.src, concretize_type t.tgt),
   let gen := mk_std_gen,
   match lp1, lp2 with
@@ -129,32 +131,35 @@ meta def check_one (t:transformation) (n:nat): io unit := do
     let init_st' := freevar.create_init_state_smt freevars,
     let r := root_name p1,
 
-    print_ln format!"Root variable:{r}",
-    print_ln "=== Does it refine? (EXE) ===",
+    debug_ln (format!"Root variable:{r}"),
+    debug_ln "=== Does it refine? (EXE) ===",
     let ob_exec := opt.check_single_reg irsem_exec p1 p2 r init_st,
-    print_ln ob_exec,
+    debug_ln (to_string ob_exec),
 
-    print_ln "=== Does it refine? (SMT) ===",
+    debug_ln "=== Does it refine? (SMT) ===",
     let ob_smt := opt.check_single_reg irsem_smt p1 p2 r init_st',
-    print_ln ob_smt,
+    debug_ln (to_string ob_smt),
 
     match ob_smt with
     | some smtobj := do
-      print_ln "=== Z3 Result ===",
+      debug_ln "=== Z3 Result ===",
       let smtcode := vcgen.emit_refine_smt p1 p2
           freevars smtobj smt_emitter,
-      print_ln smtcode,
+      debug_ln smtcode,
       z3i ← z3_instance.start,
       smtres ← z3_instance.raw z3i smtcode.to_string,
-      print smtres,
-      print_ln ("(Unsat means the opt. is correct)")
+      debug_ln (smtres ++ "(Unsat means the opt. is correct)"),
+      if smtres = "unsat" then
+        print_ln "Correct"
+      else
+        print_ln "Incorrect"
     | none := return ()
     end
   | _, _ := return ()
   end
 
 -- Reads transformations and checks them.
-meta def check (filename:string) (parseonly:bool): io unit := do
+meta def check (filename:string) (parseonly:bool) (verbose:bool): io unit := do
   hl ← mk_file_handle filename (io.mode.read) ff,
   charbuf ← io.fs.read_to_end hl,
 
@@ -169,7 +174,7 @@ meta def check (filename:string) (parseonly:bool): io unit := do
 
     else do
       _ ← monad.foldl (λ n tf, do
-        check_one tf n, print_ln "", return (n+1)) 1 tfs,
+        check_one tf n verbose, print_ln "", return (n+1)) 1 tfs,
       return ()
   end
 
@@ -182,10 +187,15 @@ meta def main : io unit :=
   do args ← io.cmdline_args,
   let cmd := list.head args in
   let args := list.tail args in
+  let get_verbose (l:list string): bool :=
+    match l with | [] := ff | l :=
+    if list.head (list.reverse l) = "-verbose" then tt else ff end in
   match cmd with
   | "-input" := singleprog.check (list.head args) ff
   | "-input2" := singleprog.check (list.head args) tt
   | "-parseopt" := verifyopt.check (list.head args) tt
+                    (get_verbose (list.tail args))
   | "-verifyopt" := verifyopt.check (list.head args) ff
+                    (get_verbose (list.tail args))
   | _ := print_ln ("Unknown argument: " ++ cmd)
   end
