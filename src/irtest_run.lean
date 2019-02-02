@@ -382,7 +382,7 @@ def run_test (clangpath:string) (verbose:bool) (g:std_gen)
 
   -- Get the result of it from Lean's semantics.
   debug_ln "- Final state",
-  let final_st := irsem.bigstep_exe irsem_exec init_st ⟨insts⟩,
+  let final_st := irsem.bigstep irsem_exec init_st ⟨insts⟩,
   match final_st with
   | none := do
     io.print_ln "UNREACHABLE!",

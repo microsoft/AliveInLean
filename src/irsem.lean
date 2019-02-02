@@ -355,7 +355,7 @@ def step_selectop (vcond v1 v2:valty)
     else none
   end
 
-def step_exe (s1:irstate) (i:instruction) : option irstate :=
+def step (s1:irstate) (i:instruction) : option irstate :=
   match i with
   | instruction.binop retty (reg.r lhsn) code bflags op1 op2 :=
     do
@@ -381,11 +381,11 @@ def step_exe (s1:irstate) (i:instruction) : option irstate :=
   end
 
 -- Execution of a program
-def bigstep_exe (inits:irstate) (p:program): option irstate :=
+def bigstep (inits:irstate) (p:program): option irstate :=
   list.foldl (λ befst inst,
       match befst with
       | none := none -- Stuck!
-      | some st := step_exe st inst
+      | some st := step st inst
       end) (some inits) (p.insts)
 
 end

@@ -8,7 +8,7 @@ open irsem_exec
 
 -- a single small-step function
 @[simp]
-def step := irsem.step_exe irsem_exec
+def step := irsem.step irsem_exec
 
 -- a new udiv instruction
 @[simp]
@@ -47,7 +47,7 @@ lemma never_poison:
     injection HNOUB, clear HNOUB,
   cases op2, simp at *,
   {
-    unfold irsem.step_exe at HSTEP,
+    unfold irsem.step at HSTEP,
     cases (irsem.get_value irsem_exec (ub, regs) op1 (ty.int isz)) with val1;
       unfold has_bind.bind at *; unfold option.bind at *,
     injection HSTEP,

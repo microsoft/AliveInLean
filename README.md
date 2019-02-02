@@ -32,7 +32,7 @@ More test scripts are in `scripts/`.
 
 - Specification, as well as proof, is in `src/spec/`.
 
-1. Execution of `bigstep_exe` with two different value semantics (SMT expr / concrete value)
+1. Execution of `bigstep` with two different value semantics (SMT expr / concrete value)
 has some good relations.
 
 ```
@@ -41,8 +41,8 @@ def encode (ss:irstate_smt) (se:irstate_exec) (η:freevar.env) :=
 
 def bigstep_both:= ∀ ss se (p:program) oss' ose' η
     (HENC:encode ss se η)
-    (HOSS': oss' = bigstep_exe irsem_smt ss p)
-    (HOSE': ose' = bigstep_exe irsem_exec se p),
+    (HOSS': oss' = bigstep irsem_smt ss p)
+    (HOSE': ose' = bigstep irsem_exec se p),
   none_or_some oss' ose' (λ ss' se', encode ss' se' η)
 -- Its proof is at equiv.lean
 ```

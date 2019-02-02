@@ -466,14 +466,14 @@ end
 
 lemma step_replace: ∀ (ss:irstate_smt) (i:instruction)
     (η:freevar.env),
-  step_exe irsem_smt (η⟦ss⟧) i = η⟦step_exe irsem_smt ss i⟧'
+  step irsem_smt (η⟦ss⟧) i = η⟦step irsem_smt ss i⟧'
 := begin
   intros,
   cases i,
   case instruction.binop : retty lhs bopc flags op1 op2 {
     cases lhs,
 
-    unfold step_exe,
+    unfold step,
     unfold has_bind.bind,
     rw get_value_replace,
     generalize HOP1: η⟦get_value irsem_smt ss op1 retty⟧' = vop1,
@@ -510,7 +510,7 @@ lemma step_replace: ∀ (ss:irstate_smt) (i:instruction)
   case instruction.icmpop : opty lhs cond op1 op2 {
     cases lhs,
     
-    unfold step_exe,
+    unfold step,
     unfold has_bind.bind,
     rw get_value_replace,
     generalize HOP1: η⟦get_value irsem_smt ss op1 opty⟧' = vop1,
@@ -547,7 +547,7 @@ lemma step_replace: ∀ (ss:irstate_smt) (i:instruction)
   case instruction.selectop : lhs condty cond opty op1 op2 {
     cases lhs,
     
-    unfold step_exe,
+    unfold step,
     unfold has_bind.bind,
     rw get_value_replace,
 
@@ -593,7 +593,7 @@ lemma step_replace: ∀ (ss:irstate_smt) (i:instruction)
     cases lhs,
     cases toty,
     {
-      unfold step_exe,
+      unfold step,
       unfold has_bind.bind,
       rw get_value_replace,
 
@@ -611,26 +611,26 @@ lemma step_replace: ∀ (ss:irstate_smt) (i:instruction)
       }
     },
     {
-      unfold step_exe
+      unfold step
     }
   }
 end
 
 theorem step_encode_both: ∀ ss se i oss ose η
     (HENC:encode ss se η)
-    (HOSS': oss = step_exe irsem_smt ss i)
-    (HOSE': ose = step_exe irsem_exec se i),
+    (HOSS': oss = step irsem_smt ss i)
+    (HOSE': ose = step irsem_exec se i),
   none_or_some oss ose (λ ss' se', encode ss' se' η)
 := begin
   intros,
-  have HSTEP : none_or_some (step_exe irsem_smt (η⟦ss⟧) i)
-      (step_exe irsem_exec se i) (λ ss' se', irstate_equiv ss' se'),
+  have HSTEP : none_or_some (step irsem_smt (η⟦ss⟧) i)
+      (step irsem_exec se i) (λ ss' se', irstate_equiv ss' se'),
   {
     apply step_both_prf,
     apply HENC,
     refl, refl
   },
-  have HOSS'': η⟦oss⟧' = step_exe irsem_smt (η⟦ss⟧) i, {
+  have HOSS'': η⟦oss⟧' = step irsem_smt (η⟦ss⟧) i, {
     rw step_replace,
     rw HOSS'
   },
@@ -685,7 +685,7 @@ theorem bigstep_both_prf: bigstep_both
   induction p with i p',
   { -- empty instruction
     intros,
-    unfold irsem.bigstep_exe at HOSS' HOSE',
+    unfold irsem.bigstep at HOSS' HOSE',
     simp at HOSS' HOSE',
     right,
     apply exists.intro ss,
@@ -694,8 +694,8 @@ theorem bigstep_both_prf: bigstep_both
   },
   { -- a new instruction at the front
     intros,
-    generalize HSS:irsem.step_exe irsem_smt ss i = oss0,
-    generalize HSE:irsem.step_exe irsem_exec se i = ose0,
+    generalize HSS:irsem.step irsem_smt ss i = oss0,
+    generalize HSE:irsem.step irsem_exec se i = ose0,
     have HENC0 : none_or_some oss0 ose0 (λ ss0 se0, encode ss0 se0 η),
     {
       apply step_encode_both,
@@ -741,7 +741,7 @@ theorem bigstep_both_prf: bigstep_both
 end
 
 lemma bigstep_replace: ∀ ss p (η:freevar.env),
-  η⟦bigstep_exe irsem_smt ss p⟧' = bigstep_exe irsem_smt (η⟦ss⟧) p
+  η⟦bigstep irsem_smt ss p⟧' = bigstep irsem_smt (η⟦ss⟧) p
 := begin
   intros,
   simp,
@@ -754,8 +754,8 @@ lemma bigstep_replace: ∀ ss p (η:freevar.env),
   },
   {
     intros,
-    generalize HSS: step_exe irsem_smt ss i = ss',
-    generalize HRSS: step_exe irsem_smt (η⟦ss⟧) i = rss',
+    generalize HSS: step irsem_smt ss i = ss',
+    generalize HRSS: step irsem_smt (η⟦ss⟧) i = rss',
     cases ss'; cases rss',
     {
       rw bigstep_unroll_none_smt,
@@ -770,7 +770,7 @@ lemma bigstep_replace: ∀ ss p (η:freevar.env),
       rw bigstep_unroll_some_smt,
       rw bigstep_unroll_some_smt,
       apply p_ih,
-      have HTMP: η⟦step_exe irsem_smt ss i⟧' = η⟦some ss'⟧',
+      have HTMP: η⟦step irsem_smt ss i⟧' = η⟦some ss'⟧',
       {
         rw HSS
       },

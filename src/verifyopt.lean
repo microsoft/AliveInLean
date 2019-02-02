@@ -45,8 +45,8 @@ def check_val (vsrc vtgt:irsem.valty sem) : option sem.boolty :=
 
 def check_single_reg0 (psrc ptgt:program) (r:string) (initst:irstate sem) : option sem.boolty :=
   do
-  s1 ← irsem.bigstep_exe sem initst psrc,
-  s2 ← irsem.bigstep_exe sem initst ptgt,
+  s1 ← irsem.bigstep sem initst psrc,
+  s2 ← irsem.bigstep sem initst ptgt,
   v1 ← irsem.irstate.getreg sem s1 r,
   v2 ← irsem.irstate.getreg sem s2 r,
   ref ← check_val v1 v2,
@@ -54,8 +54,8 @@ def check_single_reg0 (psrc ptgt:program) (r:string) (initst:irstate sem) : opti
 
 def check_single_reg (psrc ptgt:program) (r:string) (initst:irstate sem) : option sem.boolty :=
   do
-  s1 ← irsem.bigstep_exe sem initst psrc,
-  s2 ← irsem.bigstep_exe sem initst { insts := psrc.insts ++ ptgt.insts },
+  s1 ← irsem.bigstep sem initst psrc,
+  s2 ← irsem.bigstep sem initst { insts := psrc.insts ++ ptgt.insts },
   v1 ← irsem.irstate.getreg sem s1 r,
   v2 ← irsem.irstate.getreg sem s2 r,
   ref ← check_val v1 v2,

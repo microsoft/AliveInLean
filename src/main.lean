@@ -57,10 +57,10 @@ meta def run_and_emit_smt2 (typedp:program) : io unit :=
   print_ln $ "free vars:" ++ to_string freevars,
   print_ln "=== Run-EXE ===",
   let (init_st, gen) := freevar.create_init_state_exec freevars gen,
-  final_st ← print_result (bigstep_exe irsem_exec init_st typedp),
+  final_st ← print_result (bigstep irsem_exec init_st typedp),
   print_ln "=== Run-SMT ===",
   let init_st' := freevar.create_init_state_smt freevars,
-  final_st' ← print_result (bigstep_exe irsem_smt init_st' typedp),
+  final_st' ← print_result (bigstep irsem_smt init_st' typedp),
 
   match final_st, final_st' with
   | (some final_st), (some final_st') :=

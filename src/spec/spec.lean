@@ -245,8 +245,8 @@ inductive irstate_equiv: irstate_smt → irstate_exec → Prop
 def step_both := ∀ {ss:irstate_smt} {se:irstate_exec} {i:instruction}
     {oss':option irstate_smt} {ose':option irstate_exec}
     (HSTEQ: irstate_equiv ss se)
-    (HOSS': oss' = step_exe irsem_smt ss i)
-    (HOSE': ose' = step_exe irsem_exec se i),
+    (HOSS': oss' = step irsem_smt ss i)
+    (HOSE': ose' = step irsem_exec se i),
   none_or_some oss' ose' (λ ss' se', irstate_equiv ss' se')
 
 
@@ -256,8 +256,8 @@ def encode (ss:irstate_smt) (se:irstate_exec) (η:freevar.env) :=
 
 def bigstep_both:= ∀ ss se p oss' ose' η
     (HENC:encode ss se η)
-    (HOSS': oss' = bigstep_exe irsem_smt ss p)
-    (HOSE': ose' = bigstep_exe irsem_exec se p),
+    (HOSS': oss' = bigstep irsem_smt ss p)
+    (HOSE': ose' = bigstep irsem_exec se p),
   none_or_some oss' ose' (λ ss' se', encode ss' se' η)
 
 def init_state_encode:= ∀ (freevars:list (string × ty)) (sg sg':std_gen) ise iss
@@ -306,14 +306,14 @@ def root_refines (ssrc:irstate_exec) (stgt:irstate_exec) (root:string): Prop :=
 
 def refines_finalstate (psrc ptgt:program) (se0:irstate_exec) :=
   ∀ se se',
-    some se  = bigstep_exe irsem_exec se0 psrc →
-    some se' = bigstep_exe irsem_exec se0 ptgt →
+    some se  = bigstep irsem_exec se0 psrc →
+    some se' = bigstep irsem_exec se0 ptgt →
     irstate_refines se se'
 
 def root_refines_finalstate (psrc ptgt:program) (se0:irstate_exec) (root:string):=
   ∀ se se',
-    some se  = bigstep_exe irsem_exec se0 psrc →
-    some se' = bigstep_exe irsem_exec se0 ptgt →
+    some se  = bigstep irsem_exec se0 psrc →
+    some se' = bigstep irsem_exec se0 ptgt →
     root_refines se se' root
 
 def refines_smt (psrc ptgt:program) := ∀ (η:freevar.env) ss0 se0,

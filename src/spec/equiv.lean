@@ -1420,7 +1420,7 @@ end
 
 
 /-
- - Theorems about step_exe.
+ - Theorems about step.
  -/
 
 lemma bop_step_both: ∀ (ss:irstate_smt) (se:irstate_exec) (lhsname:string)
@@ -1833,7 +1833,7 @@ begin
     cases lhs,
     cases lhs,
 
-    unfold step_exe at HOSS' HOSE',
+    unfold step at HOSS' HOSE',
     generalize HEVOP1: get_value irsem_exec se op1 retty = evop1,
     generalize HSVOP1: get_value irsem_smt ss op1 retty = svop1,
     generalize HEVOP2: get_value irsem_exec se op2 retty = evop2,
@@ -1905,7 +1905,7 @@ begin
     cases lhs,
     cases lhs,
 
-    unfold step_exe at HOSS' HOSE',
+    unfold step at HOSS' HOSE',
     generalize HEVOP1: get_value irsem_exec se op1 opty = evop1,
     generalize HSVOP1: get_value irsem_smt ss op1 opty = svop1,
     generalize HEVOP2: get_value irsem_exec se op2 opty = evop2,
@@ -1977,7 +1977,7 @@ begin
     cases lhs,
     cases lhs,
 
-    unfold step_exe at HOSS' HOSE',
+    unfold step at HOSS' HOSE',
     generalize HSVCNDOP: get_value irsem_smt ss cond condty = svcondop,
     generalize HEVCNDOP: get_value irsem_exec se cond condty = evcondop,
     generalize HEVOP1: get_value irsem_exec se op1 opty = evop1,
@@ -2080,7 +2080,7 @@ begin
 
     cases toty,
     case ty.int : toisz {
-      unfold step_exe at HOSS' HOSE',
+      unfold step at HOSS' HOSE',
       generalize HEVOP: get_value irsem_exec se op fromty = evop,
       generalize HSVOP: get_value irsem_smt ss op fromty = svop,
       rw HEVOP at HOSE',
@@ -2120,7 +2120,7 @@ begin
       }
     },
     {
-      unfold step_exe at HOSS' HOSE',
+      unfold step at HOSS' HOSE',
       left, split; assumption
     }
   }
@@ -2128,53 +2128,53 @@ end
 
 lemma bigstep_unroll_none_smt: ∀ s (i:instruction)
     (l:list instruction)
-    (H: none = irsem.step_exe irsem_smt s i),
-  irsem.bigstep_exe irsem_smt s { insts := i::l } = none
+    (H: none = irsem.step irsem_smt s i),
+  irsem.bigstep irsem_smt s { insts := i::l } = none
 := begin
   intros,
-  unfold irsem.bigstep_exe,
+  unfold irsem.bigstep,
   simp,
-  unfold bigstep_exe._match_1,
+  unfold bigstep._match_1,
   rw ← H,
   induction l, refl, simp, assumption
 end
 
 lemma bigstep_unroll_none_exec: ∀ s (i:instruction)
     (l:list instruction)
-    (H: none = irsem.step_exe irsem_exec s i),
-  irsem.bigstep_exe irsem_exec s { insts := i::l } = none
+    (H: none = irsem.step irsem_exec s i),
+  irsem.bigstep irsem_exec s { insts := i::l } = none
 := begin
   intros,
-  unfold irsem.bigstep_exe,
+  unfold irsem.bigstep,
   simp,
-  unfold bigstep_exe._match_1,
+  unfold bigstep._match_1,
   rw ← H,
   induction l, refl, simp, assumption
 end
 
 lemma bigstep_unroll_some_smt: ∀ s s' (i:instruction)
     (l:list instruction)
-    (H: some s' = irsem.step_exe irsem_smt s i),
-  irsem.bigstep_exe irsem_smt s { insts := i::l } =
-    irsem.bigstep_exe irsem_smt s' { insts := l }
+    (H: some s' = irsem.step irsem_smt s i),
+  irsem.bigstep irsem_smt s { insts := i::l } =
+    irsem.bigstep irsem_smt s' { insts := l }
 := begin
   intros,
-  unfold bigstep_exe,
+  unfold bigstep,
   simp,
-  unfold bigstep_exe._match_1,
+  unfold bigstep._match_1,
   rw H
 end
 
 lemma bigstep_unroll_some_exec: ∀ s s' (i:instruction)
     (l:list instruction)
-    (H: some s' = irsem.step_exe irsem_exec s i),
-  irsem.bigstep_exe irsem_exec s { insts := i::l } =
-    irsem.bigstep_exe irsem_exec s' { insts := l }
+    (H: some s' = irsem.step irsem_exec s i),
+  irsem.bigstep irsem_exec s { insts := i::l } =
+    irsem.bigstep irsem_exec s' { insts := l }
 := begin
   intros,
-  unfold bigstep_exe,
+  unfold bigstep,
   simp,
-  unfold bigstep_exe._match_1,
+  unfold bigstep._match_1,
   rw H
 end
 
@@ -2182,8 +2182,8 @@ end
 lemma bigstep_both_equiv: ∀ {ss:irstate_smt} {se:irstate_exec} {p:program}
     {oss':option irstate_smt} {ose':option irstate_exec}
     (HSTEQ: irstate_equiv ss se)
-    (HOSS': oss' = bigstep_exe irsem_smt ss p)
-    (HOSE': ose' = bigstep_exe irsem_exec se p),
+    (HOSS': oss' = bigstep irsem_smt ss p)
+    (HOSE': ose' = bigstep irsem_exec se p),
   none_or_some oss' ose' (λ ss' se', irstate_equiv ss' se')
 := begin
   intros,
@@ -2192,7 +2192,7 @@ lemma bigstep_both_equiv: ∀ {ss:irstate_smt} {se:irstate_exec} {p:program}
   induction p with i p',
   { -- empty instruction
     intros,
-    unfold irsem.bigstep_exe at HOSS' HOSE',
+    unfold irsem.bigstep at HOSS' HOSE',
     simp at HOSS' HOSE',
     right,
     apply exists.intro ss,
@@ -2201,8 +2201,8 @@ lemma bigstep_both_equiv: ∀ {ss:irstate_smt} {se:irstate_exec} {p:program}
   },
   { -- a new instruction at the front
     intros,
-    generalize HSS:irsem.step_exe irsem_smt ss i = oss0,
-    generalize HSE:irsem.step_exe irsem_exec se i = ose0,
+    generalize HSS:irsem.step irsem_smt ss i = oss0,
+    generalize HSE:irsem.step irsem_exec se i = ose0,
     have HENC0 : none_or_some oss0 ose0 (λ ss0 se0, irstate_equiv ss0 se0),
     {
       apply step_both_prf,
