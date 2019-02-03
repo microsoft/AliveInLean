@@ -457,12 +457,12 @@ def run_test_n (clangpath:string) (verbose:bool): nat → std_gen → io unit
 
 meta def main : io unit :=
   let failmsg:io unit := do
-      io.print_ln "irtest_run.lean <itrcnt> <clang path> <verbose(y/n)>" in
+      io.print_ln "irtest_run.lean <itrcnt> <clang path> <verbose(y/n)> <rand_seed>" in
   do
   args ← io.cmdline_args,
   match args with
-  | cnt::clangpath::verbose::_ :=
-    let g := mk_std_gen in
+  | cnt::clangpath::verbose::seed::_ :=
+    let g := mk_std_gen seed.to_nat in
     do run_test_n clangpath (verbose = "y") cnt.to_nat g,
     return ()
   | _ := failmsg
