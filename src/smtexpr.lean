@@ -90,14 +90,19 @@ def of_int (sz:size) : ℤ → sbitvec sz
 | x@(int.neg_succ_of_nat p) :=
   sbitvec.const sz (((2 ^ sz.val) - p - 1) % (2^sz.val))
 
+@[simp]
 def one (sz:size) : sbitvec sz := of_int sz 1
 
+@[simp]
 def zero (sz:size) : sbitvec sz := of_int sz 0
 
+@[simp]
 def intmin (sz:size) : sbitvec sz := of_int sz (int_min_nat sz)
 
+@[simp]
 def intmax (sz:size) : sbitvec sz := of_int sz (int.of_nat ((2^(sz.val-1))-1))
 
+@[simp]
 def uintmax (sz:size) : sbitvec sz := of_int sz (all_one_nat sz)
 
 def of_bool (b:sbool) : sbitvec (size.one) :=
@@ -127,9 +132,11 @@ end
 
 variable {sz:size}
 
+@[simp]
 def mk_zext (m:size) (a:sbitvec sz): sbitvec (sz.add m) :=
   sbitvec.zext (sz.add m) a
 
+@[simp]
 def mk_sext (m:size) (a:sbitvec sz): sbitvec (sz.add m) :=
   sbitvec.sext (sz.add m) a
 

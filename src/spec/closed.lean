@@ -63,7 +63,6 @@ lemma closed_b_never_var: ∀ s, ¬ closed_b (sbool.var s)
   unfold env.add_b at H',
   unfold freevar.env.replace_sb at H',
   simp at H',
-  unfold env.replace_sb._match_1 at H',
   cases H'
 end
 
@@ -76,7 +75,6 @@ lemma closed_bv_never_var: ∀ sz s, ¬ closed_bv (sbitvec.var sz s)
   unfold env.add_bv at H',
   unfold freevar.env.replace_sbv at H',
   simp at H',
-  unfold env.replace_sbv._match_1 at H',
   cases H'
 end
 
@@ -169,7 +167,6 @@ lemma closed_b_var_add2: ∀ (η:freevar.env) (v:bool) (s:string),
   simp,
   intros,
   generalize Hb': (η.b s) = b',
-  unfold env.replace_sb._match_1 at *,
   unfold closed_b,
   intros, cases v, refl, refl
 end
@@ -204,14 +201,13 @@ lemma closed_bv_var_add2: ∀ (η:freevar.env) sz v (s:string),
   closed_bv ((η.add_bv s v)⟦sbitvec.var sz s⟧)
 := begin
   unfold env.add_bv,
-  unfold freevar.env.replace_sbv,
-  simp,
   intros,
   generalize Hb': (η.b s) = b',
-  unfold env.replace_sbv._match_1 at *,
   unfold closed_bv,
-  intros, cases v; unfold sbitvec.of_int;
-  unfold freevar.env.replace_sbv
+  intros, cases v;
+  unfold freevar.env.replace_sbv; simp,
+  { unfold sbitvec.of_int, unfold env.replace_sbv },
+  { unfold sbitvec.of_int, unfold env.replace_sbv },
 end
 
 lemma ival_closed: ∀ sz vn pn (η:freevar.env) z b,
@@ -224,18 +220,12 @@ lemma ival_closed: ∀ sz vn pn (η:freevar.env) z b,
   unfold env.add_b,
   unfold env.add_bv,
   simp,
-  unfold freevar.env.replace_valty,
-  unfold freevar.env.replace_sb,
-  unfold freevar.env.replace_sbv,
-  simp,
   split,
   {
-    unfold env.replace_sbv._match_1,
     cases z; unfold sbitvec.of_int;
     unfold freevar.env.replace_sbv
   },
   {
-    unfold env.replace_sb._match_1,
     rw env.replace_sb_of_bool
   }
 end
@@ -289,17 +279,8 @@ lemma closed_regfile_update_split: ∀ {rf:regfile irsem_smt} {n} {v},
     unfold regfile.apply_to_values at *,
     simp at HC,
     split,
-    {
-      intros,
-      have HC := HC η,
-      injection HC
-    },
-    {
-      intros,
-      have HC := HC η,
-      injection HC,
-      injection h_1
-    }
+    { intros, have HC := HC η, injection HC },
+    { intros, have HC := HC η, injection HC, injection h_1 }
   },
   {
     intros HC η,
@@ -307,10 +288,12 @@ lemma closed_regfile_update_split: ∀ {rf:regfile irsem_smt} {n} {v},
     have HC1 := HC1 η,
     have HC2 := HC2 η,
     unfold regfile.apply_to_values at *,
-    simp,
+    simp at *,
     rw HC1, rw HC2
   }
 end
+
+
 
 -- TODO 1: Merge closed_b_add_b and closed_bv_add_b into a single
 -- theorem (I tried merging them

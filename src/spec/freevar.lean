@@ -460,11 +460,10 @@ lemma env.empty_replace: (∀ (b:sbool), freevar.env.empty⟦b⟧ = b) ∧
     intros,
     unfold freevar.env.replace_sb,
     unfold freevar.env.empty,
-    simp,
-    unfold freevar.env.replace_sb._match_1
+    simp, done
   },
   any_goals {
-    intros b H, unfold freevar.env.replace_sb, rw H, done
+    intros b H, unfold freevar.env.replace_sb, rw H
   },
   any_goals {
     intros b1 b2 H1 H2, unfold freevar.env.replace_sb, rw [H1, H2], done
@@ -486,8 +485,7 @@ lemma env.empty_replace: (∀ (b:sbool), freevar.env.empty⟦b⟧ = b) ∧
     intros,
     unfold freevar.env.replace_sbv,
     unfold freevar.env.empty,
-    simp,
-    unfold freevar.env.replace_sbv._match_1
+    simp, done
   },
   any_goals {
     intros sz v' sz' H,
@@ -504,6 +502,7 @@ lemma env.empty_replace: (∀ (b:sbool), freevar.env.empty⟦b⟧ = b) ∧
     rw [H, H1, H2]
   }
 end
+
 
 lemma env.empty_replace_sb: ∀ (b:sbool), freevar.env.empty⟦b⟧ = b
 := begin
@@ -530,18 +529,7 @@ lemma env.replace_sb_overflowchk_add: ∀
     sbitvec.overflow_chk @sbitvec.add sz2 nsw (η⟦v1⟧) (η⟦v2⟧)
 := begin
   intros, unfold sbitvec.overflow_chk,
-  cases nsw; simp; unfold freevar.env.replace_sb,
-  {
-    rw env.replace_sbv_extract,
-    rw env.replace_sbv_add,
-    repeat { rw env.replace_sbv_mk_zext },
-    unfold sbitvec.zero, rw env.replace_sbv_of_int
-  },
-  {
-    rw env.replace_sbv_add,
-    repeat { rw env.replace_sbv_mk_sext },
-    rw env.replace_sbv_add
-  }
+  cases nsw; simp, rw env.replace_sbv_of_int
 end
 
 lemma env.replace_sb_overflowchk_sub: ∀
@@ -550,18 +538,7 @@ lemma env.replace_sb_overflowchk_sub: ∀
     sbitvec.overflow_chk @sbitvec.sub sz2 nsw (η⟦v1⟧) (η⟦v2⟧)
 := begin
   intros, unfold sbitvec.overflow_chk,
-  cases nsw; simp; unfold freevar.env.replace_sb,
-  {
-    rw env.replace_sbv_extract,
-    rw env.replace_sbv_sub,
-    repeat { rw env.replace_sbv_mk_zext },
-    unfold sbitvec.zero, rw env.replace_sbv_of_int
-  },
-  {
-    rw env.replace_sbv_sub,
-    repeat { rw env.replace_sbv_mk_sext },
-    rw env.replace_sbv_sub
-  }
+  cases nsw; simp, rw env.replace_sbv_of_int
 end
 
 lemma env.replace_sb_overflowchk_mul: ∀
@@ -570,18 +547,7 @@ lemma env.replace_sb_overflowchk_mul: ∀
     sbitvec.overflow_chk @sbitvec.mul sz2 nsw (η⟦v1⟧) (η⟦v2⟧)
 := begin
   intros, unfold sbitvec.overflow_chk,
-  cases nsw; simp; unfold freevar.env.replace_sb,
-  {
-    rw env.replace_sbv_extract,
-    rw env.replace_sbv_mul,
-    repeat { rw env.replace_sbv_mk_zext },
-    unfold sbitvec.zero, rw env.replace_sbv_of_int
-  },
-  {
-    rw env.replace_sbv_mul,
-    repeat { rw env.replace_sbv_mk_sext },
-    rw env.replace_sbv_mul
-  }
+  cases nsw; simp, rw env.replace_sbv_of_int
 end
 
 lemma env.replace_sb_overflowchk_shl: ∀
@@ -591,20 +557,9 @@ lemma env.replace_sb_overflowchk_shl: ∀
 := begin
   intros, unfold sbitvec.shl_overflow_chk,
   unfold sbitvec.overflow_chk,
-  cases nsw; simp; unfold freevar.env.replace_sb,
-  {
-    rw env.replace_sbv_extract,
-    rw env.replace_sbv_shl,
-    repeat { rw env.replace_sbv_mk_zext },
-    unfold sbitvec.zero, rw env.replace_sbv_of_int,
-    rw env.replace_sbv_urem, rw env.replace_sbv_of_int
-  },
-  {
-    rw env.replace_sbv_shl,
-    repeat { rw env.replace_sbv_mk_sext },
-    rw env.replace_sbv_shl,
-    rw env.replace_sbv_urem, rw env.replace_sbv_of_int
-  }
+  cases nsw; simp,
+  { repeat { rw env.replace_sbv_of_int }, tauto },
+  { rw env.replace_sbv_of_int, tauto }
 end
 
 -- irstate
@@ -925,7 +880,7 @@ lemma env.add_b_replace_match: ∀ (η:freevar.env) n b,
   intros,
   unfold freevar.env.replace_sb,
   unfold freevar.env.add_b,
-  simp, unfold freevar.env.replace_sb._match_1
+  simp
 end
 
 lemma env.add_bv_replace_match: ∀ (η:freevar.env) n z sz,
@@ -934,7 +889,7 @@ lemma env.add_bv_replace_match: ∀ (η:freevar.env) n z sz,
   intros,
   unfold freevar.env.replace_sbv,
   unfold freevar.env.add_bv,
-  simp, unfold freevar.env.replace_sbv._match_1
+  simp
 end
 
 lemma env.add_bv_replace_sb: ∀ (η:freevar.env) n n' z,
@@ -1297,8 +1252,10 @@ lemma env.not_in_add_bv_irstate_comm: ∀ (η:freevar.env) (ss:irstate irsem_smt
       rw ss_snd_ih,
       cases ss_snd_hd with rn v,
       cases v with sz iv pv,
-      rw env.not_in_add_bv_valty_comm,
-      assumption
+      simp,
+      rw env.not_in_add_bv_bv_comm,
+      rw env.not_in_add_bv_b_comm,
+        assumption, assumption
     }
   }
 end
@@ -1332,8 +1289,10 @@ lemma env.not_in_add_b_irstate_comm: ∀ (η:freevar.env) (ss:irstate irsem_smt)
       rw ss_snd_ih,
       cases ss_snd_hd with rn v,
       cases v with sz iv pv,
-      rw env.not_in_add_b_valty_comm,
-      assumption
+      simp,
+      rw env.not_in_add_b_bv_comm,
+      rw env.not_in_add_b_b_comm,
+        assumption, assumption
     }
   }
 end

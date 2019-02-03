@@ -185,7 +185,7 @@ lemma bvequiv_urem: ∀ (sz:size) (sb:sbitvec sz) eb
   intros,
   apply bv_equiv.urem, assumption, apply bvequiv_from_z,
   { cases sz, unfold_coes, simp, unfold uint_like.from_z, unfold bitvector.ne,
-    unfold bitvector.zero, unfold bitvector.of_int, simp,
+    unfold bitvector.of_int, simp,
     intros H, injection H, simp at h_1, rw nat.mod_pow2 at h_1,
     rw h_1 at sz_property, cases sz_property
   },

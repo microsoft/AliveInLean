@@ -108,6 +108,7 @@ namespace env
   def add_b (e:env) (name:string) (b:bool):env :=
     {bv := e.bv, b := (λ n, if n = name then some b else e.b n)}
 
+  @[simp]
   mutual def replace_sbv, replace_sb
   with replace_sbv: Π (η:env) {sz:size}, sbitvec sz → sbitvec sz
   | η sz x@(sbitvec.var _ name) :=
@@ -201,8 +202,8 @@ namespace env
     have 0 < sbitvec.sizeof sz x, by apply sbitvec.decr_sbitvec,
     sbool.ult (replace_sbv η x) (replace_sbv η y)
   | η x := x
-  
 
+  @[simp, reducible]
   def replace_valty (η:env) (v:irsem.valty irsem_smt) :=
     match v with
     | irsem.valty.ival sz i p :=

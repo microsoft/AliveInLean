@@ -561,8 +561,8 @@ lemma step_replace: ∀ (ss:irstate_smt) (i:instruction)
       have HOPCOND' := apply_some HOPCOND,
       cases HOPCOND' with vopcond' HOPCOND',
       rw HOPCOND',
-      rw get_value_replace,
       unfold option.bind,
+      rw get_value_replace,
       
       cases vop1,
       { rw apply_none at HOP1, rw HOP1, unfold option.bind },

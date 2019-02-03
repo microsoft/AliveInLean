@@ -34,6 +34,9 @@ def is_poison: irsem.valty irsem_exec → Prop
 set_option eqn_compiler.zeta true
 set_option pp.proofs true
 
+local attribute [simp] option.bind irsem.step irsem.step_bop
+  irsem.bop irsem.bop_ub irsem.irstate.updateub irsem.irstate.updatereg
+
 lemma never_poison:
   ∀ isz name op1 op2 st st' val
     (HSTEP:step st (udiv isz name op1 op2) = some st')
@@ -47,53 +50,31 @@ lemma never_poison:
     injection HNOUB, clear HNOUB,
   cases op2, simp at *,
   {
-    unfold irsem.step at HSTEP,
     cases (irsem.get_value irsem_exec (ub, regs) op1 (ty.int isz)) with val1;
       unfold has_bind.bind at *; unfold option.bind at *,
     injection HSTEP,
-    rw ← HVAL at HSTEP, unfold option.bind at HSTEP,
-    unfold irsem.step_bop at HSTEP,
+    rw ← HVAL at HSTEP, simp at HSTEP,
     cases val1 with isz1 ii1 ip1,
     cases val with isz2 ii2 ip2,
+    simp at HSTEP,
     have HISZDEC:decidable (isz1 = isz2), apply_instance,
-    cases HISZDEC;
-      unfold irsem.step_bop._match_1 at HSTEP;
-      unfold irsem.bop at HSTEP;
-      unfold irsem.step_bop._match_2 at HSTEP;
-      unfold irsem.bop_val at HSTEP,
-    { rw dif_neg at HSTEP, injection HSTEP
-    },
-    {
-      rw (dif_pos HISZDEC) at HSTEP,
+    cases HISZDEC; unfold irsem.bop_val at HSTEP,
+    { rw dif_neg at HSTEP, injection HSTEP },
+    { rw (dif_pos HISZDEC) at HSTEP,
       injection HSTEP with HSTEP', clear HSTEP,
-      generalize HH:
-  (irsem.bop_ub irsem_exec isz1 bopcode.udiv ii1 ip1 (cast (by rw HISZDEC) ii2) ip2)
-    = eub,
-      rw HH at HSTEP',
-      unfold irsem.irstate.updateub at HSTEP',
-      unfold irsem.irstate.updatereg at HSTEP',
-      simp at HSTEP', injection HSTEP' with HUB HREG,
-      cases eub, cases ub; injection HUB,
-      -- now let's unfold irsem.bop_ub.
-      unfold irsem.bop_ub at HH,
-      have HDIV: bop_isdiv bopcode.udiv = tt, by simp,
-      rw (if_pos HDIV) at HH,
-      simp at *,
-      cases ip2,
-      { -- if dividend was poison..
-        unfold_coes at HH, unfold has_and.and at HH,
-        unfold bool_like.and at HH, simp at HH, exfalso, exact HH
-      },
-      {
-        simp
-      }
+      cases ub; cases ip2,
+      any_goals {
+        -- if dividend was poison or previous state was ub..
+        unfold_coes at HSTEP', unfold has_and.and at HSTEP',
+        unfold bool_like.and at HSTEP', simp at HSTEP', injection HSTEP' with HH _,
+        injection HH },
+      { simp }
     }
   },
   {
-    simp at HVAL, unfold irsem.get_value at HVAL,
+    simp at HVAL,
     cases op2,
-    dunfold irsem.get_value._match_1 at HVAL,
-    dunfold irsem.get_value._match_2 at HVAL,
+    unfold irsem.get_value at HVAL,
     have HSZDEC1: decidable (0 < isz), apply_instance,
     cases HSZDEC1,
     { rw (dif_neg HSZDEC1) at HVAL, injection HVAL },

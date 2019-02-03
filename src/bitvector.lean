@@ -43,10 +43,13 @@ def of_int (sz:size) : ℤ → bitvector sz
 | x@(int.neg_succ_of_nat p) :=
   ⟨(((2 ^ sz.val) - p - 1) % (2^sz.val)), ♯⟩
 
+@[simp]
 def all_one (sz:size) : bitvector sz := of_int sz (all_one_nat sz)
 
+@[simp]
 def int_min (sz:size) : bitvector sz := of_int sz (int_min_nat sz)
 
+@[simp]
 def zero (sz:size) : bitvector sz := of_int sz 0
 
 def of_bool (b:bool) : bitvector (size.one) := of_int size.one (cond b 1 0)
