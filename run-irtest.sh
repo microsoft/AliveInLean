@@ -1,4 +1,4 @@
-if [ "$#" -ne 1 && "$#" -ne 0 ]; then
+if [ "$#" -ne 1 ] && [ "$#" -ne 0 ]; then
   echo "run-irtest.sh"
   echo "run-irtest.sh <random seed>"
   exit 1

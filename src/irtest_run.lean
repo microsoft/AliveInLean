@@ -74,6 +74,7 @@ declare i32 @printf(i8* nocapture readonly, ...)
 -- This function is used to resolve type class instance resolution
 -- ('unable to synthesize type class instance for n = 64')
 def is_64 (n:nat):bool := n = 64
+def is_nbyte (n:nat):bool := n % 8 = 0
 
 def to_llvmir (p:program) (st:irsem.irstate irsem_exec)
   (freevars:list (string × ty)) (resty:ty): string :=
@@ -83,14 +84,15 @@ def to_llvmir (p:program) (st:irsem.irstate irsem_exec)
         | some (irsem.valty.ival sz b p) := to_string b.1
         end
     in
+  let ty_as_str (t:ty): string := to_string t in
   let args_caller:string := freevars.foldl (λ prev (var: string × ty),
       (if prev.length = 0 then "" else prev ++ ", ")
-        ++ (to_string var.2) ++ " "
+        ++ (ty_as_str var.2) ++ " "
         ++ (val_as_str var.1))
       "" in
   let args_callee:string := freevars.foldl (λ prev (var: string × ty),
       (if prev.length = 0 then "" else prev ++ ", ")
-        ++ (to_string var.2) ++ " "
+        ++ (ty_as_str var.2) ++ " "
         ++ (to_string var.1))
       "" in
   let retinst:string :=
@@ -318,6 +320,33 @@ def replace_ops (varname:string) (newop:operand) (i:instruction) :=
       (replace op1) (replace op2)
   end
 
+def canonicalize_freevars
+: vars_state (list instruction) :=
+  let canonicalize (t:ty): ty :=
+    match t with
+    | ty.int i := ty.int ((i + 7) / 8 * 8)
+    | _ := sorry
+    end in
+  let should_cast (t:ty): bool :=
+    match t with
+    | ty.int isz := ¬ is_nbyte isz
+    | _ := sorry
+    end in
+  do
+  vr ← get,
+  ls:list instruction ← monad.foldl
+    (λ (previnsts:list instruction) (v:string × ty),
+      if should_cast v.2 then
+        let newty := canonicalize v.2 in
+        do newv ← fv_new newty,
+          let i := instruction.unaryop (reg.r v.1) uopcode.trunc newty
+                    (operand.reg (reg.r newv)) v.2,
+          fv_remove v.1,
+          return (i::previnsts)
+      else return previnsts)
+      [] (vr.freevars),
+  return ls
+
 -- Randomly assigns a constant to free variables
 def assign_constants (insts:list instruction) (g:std_gen)
 : vars_state (list instruction × std_gen) :=
@@ -369,6 +398,8 @@ def run_test (clangpath:string) (verbose:bool) (g:std_gen)
   -- Create random instructions
   let ((insts, g), vr) :=
       (do (insts, g) ← rand_instlist NUM_INSTS retty "%res" g,
+          canon_insts ← canonicalize_freevars,
+          let insts := canon_insts ++ insts,
           assign_constants insts g).run vars_record_empty,
   let freevars := vr.1.reverse,
   -- Print the instructions.
@@ -386,6 +417,7 @@ def run_test (clangpath:string) (verbose:bool) (g:std_gen)
   match final_st with
   | none := do
     io.print_ln "UNREACHABLE!",
+    io.print_ln (to_string insts),
     io.print_ln ("INITIAL STATE: " ++ init_st_str),
     return (ff, g)
   | some final_st := do

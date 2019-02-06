@@ -773,6 +773,7 @@ meta def visit_each_param :test_env → nat → tactic test_env
       is_prop ← is_prop v.ty,
       tenv ← tenv.replace_var_at n newv,
       visit_each_param (if ¬ is_prop then
+          -- register a random value generator for newv
           tenv.add_evaluator newv (pick newv)
           else tenv) (n+1)
     end
@@ -811,6 +812,7 @@ meta def test (spec : expr) (gen:std_gen)
   (tenv, some newgoal) ← process_type tenv tenv.goal,
   let tenv := tenv.update_goal newgoal,
   -- 6. If a test can be omitted, stop here.
+  -- ex) if there is a false in its premise, it isn't needed to invoke smt
   if test_can_be_omitted tenv then
     return ("", test_result.omitted, tenv.g)
   else do
