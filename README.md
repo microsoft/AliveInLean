@@ -76,12 +76,6 @@ def refines_single_reg_correct := ∀ (psrc ptgt:program)
 -- Its proof is at refinement.lean
 ```
 
-- TODO
-    - Connect this with `check_single_reg`, which allows a target program to
-      use definitions in the source program for convenience
-    - Check that `freevars.get` correctly returns all free variables
-    - Connect this with correctness criteria in Alive paper
-
 # Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a

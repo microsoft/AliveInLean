@@ -52,6 +52,11 @@ def check_single_reg0 (psrc ptgt:program) (r:string) (initst:irstate sem) : opti
   ref ← check_val v1 v2,
   return ((~ irstate.getub sem s1) |b (irstate.getub sem s2 & ref))
 
+-- This is another version of check_single_reg0 that allows using variables
+-- in the source instructions.
+-- Currently, proof in AliveInLean does not exploit SSA property of a program, so this is
+-- okay. regfile.update_get_match at spec/irstate.lean states that
+-- the latest update to a variable has the latest value.
 def check_single_reg (psrc ptgt:program) (r:string) (initst:irstate sem) : option sem.boolty :=
   do
   s1 ← irsem.bigstep sem initst psrc,

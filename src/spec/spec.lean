@@ -266,6 +266,12 @@ def init_state_encode:= ∀ (freevars:list (string × ty)) (sg sg':std_gen) ise 
     (HIS:iss = create_init_state_smt freevars),
   ∃ η, encode iss ise η
 
+
+-- Correctness of freevar.get is not necessary because an SMT solver
+-- will fail if a variable is missing. If it returns a redundant variable,
+-- it does not participate in the execution of a program, so it's still okay.
+
+
 -- Refinement
 inductive val_refines : valty_exec → valty_exec → Prop
 | poison_intty: ∀ sz (isrc:intty_exec sz) psrc (itgt:intty_exec sz) ptgt,
