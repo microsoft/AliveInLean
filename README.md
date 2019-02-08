@@ -31,8 +31,6 @@
 ./run-irtest.sh
 ```
 
-More test scripts are in `scripts/`.
-
 
 ## Theorems
 
