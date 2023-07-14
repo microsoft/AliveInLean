@@ -141,7 +141,7 @@ lemma updatereg_closed: ∀ (ss ss':irstate_smt) (η:freevar.env)
   cases HC with HCUB HCRF,
   unfold irstate.updatereg at HS,
   simp at *,
-  injection HS,
+  cases HS with h_1 h_2,
   subst h_1,
   split,
   {
@@ -337,7 +337,7 @@ lemma init_state_encode_strong: ∀ (freevars:list (string × ty)) (sg sg':std_g
     unfold create_init_state_exec at HIE,
     unfold create_init_state_smt at HIS,
     simp at HIE,simp at HIS,
-    injection HIE with HIE _,
+    cases HIE with HIE _,
     rw [HIS, HIE],
     existsi (freevar.env.empty),
     unfold encode, rw empty_replace_st,

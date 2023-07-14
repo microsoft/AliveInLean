@@ -475,8 +475,8 @@ lemma selectop_equiv_true: ∀ (ss:irstate_smt) (se:irstate_exec) (szs sze:size)
   cases HCONDEQ with HCONDP HCOND,
   unfold selectop at *,
   simp at *,
-  injection HSRES with HSRES HSRESP,
-  injection HERES with HERES HERESP,
+  cases HSRES with HSRES HSRESP,
+  cases HERES with HERES HERESP,
   cases HAEQ,
   { -- poison
     apply val_equiv.poison_intty,
@@ -569,8 +569,8 @@ lemma selectop_equiv_false: ∀ (ss:irstate_smt) (se:irstate_exec) (szs sze:size
   cases HCONDEQ with HCONDP HCOND,
   unfold selectop at *,
   simp at *,
-  injection HSRES with HSRES HSRESP,
-  injection HERES with HERES HERESP,
+  cases HSRES with HSRES HSRESP,
+  cases HERES with HERES HERESP,
   cases HBEQ,
   { -- operand 2 is poison
     apply val_equiv.poison_intty,
@@ -658,8 +658,10 @@ lemma selectop_equiv: ∀ (ss:irstate_smt) (se:irstate_exec) (szs sze:size)
   intros,
   unfold selectop at *,
   simp at *,
-  injection HSRES,
-  injection HERES,
+  have HSRES := HSRES,
+  cases HSRES with h_1 h_2,
+  have HERES := HERES,
+  cases HERES with h_3 h_4,
   -- Condition is poison?
   cases HCONDEQ,
   { -- condition is poison.
@@ -698,7 +700,7 @@ lemma selectop_equiv: ∀ (ss:irstate_smt) (se:irstate_exec) (szs sze:size)
       { apply HAEQ },
       { unfold has_and.and, rw poisonty_and_tt, apply HBEQ },
       { assumption },
-      { apply HSRES },
+      { unfold selectop, simp, apply HSRES },
       { rw poisonty_and_tt_op,
         unfold selectop }
     },
@@ -723,7 +725,7 @@ lemma selectop_equiv: ∀ (ss:irstate_smt) (se:irstate_exec) (szs sze:size)
       { unfold has_and.and, simp, apply HAEQ },
       { apply HBEQ },
       { assumption },
-      { apply HSRES },
+      { unfold selectop, simp, apply HSRES },
       { rw poisonty_and_tt_op,
         unfold selectop }
     }
@@ -748,14 +750,15 @@ lemma icmpop_equiv: ∀ (szs sze:size) icond (sa:sbitvec szs) (sap:poisonty_smt)
                (irsem.valty.ival size.one eres eresp)
 := begin
   intros,
+  have HSRES := HSRES, have HERES := HERES,
   cases icond,
   all_goals {
     unfold icmpop at *,
     delta icmpop._match_1 at *,
     simp at *,
     delta id_rhs at *,
-    injection HSRES,
-    injection HERES,
+    cases HSRES with h_1 h_2,
+    cases HERES with h_3 h_4,
     unfold coe at *, unfold lift_t at *, unfold has_lift_t.lift at *,
     unfold coe_t at *,unfold has_coe_t.coe at *,unfold coe_b at *,
     unfold has_coe.coe at * },
@@ -777,13 +780,13 @@ lemma icmpop_equiv: ∀ (szs sze:size) icond (sa:sbitvec szs) (sap:poisonty_smt)
       cases HAEQ,
       { -- operand 1 is poison -> exfalso.
         rw HAEQ_a_2 at *,
-        injection HERES,
+        cases HERES_1 with h_5 h_6,
         injection h_6
       },
       cases HBEQ,
       { -- operand 2 is poison -> exfalso.
         rw HBEQ_a_2 at *,
-        injection HERES,
+        cases HERES_1 with h_5 h_6,
         cases eap,
         injection h_6,
         injection h_6
@@ -881,8 +884,8 @@ lemma castop_equiv: ∀ (efromsz sfromsz etosz stosz:size) (code:uopcode)
     unfold castop at *,
     simp [Hsz'] at HSRES,
     simp [Hsz] at HERES,
-    injection HSRES,
-    injection HERES,
+    cases HSRES with h_1 h_2,
+    cases HERES with h_3 h_4,
     rw [h_1, h_2, h_3, h_4],
 
     cases HXEQ,
@@ -1276,8 +1279,8 @@ lemma bop_exec_nonpoison_implies: ∀ (sz:size) bopc flags ea eap eb ebp
     any_goals {
       unfold bop at HEEQ,
       simp at HEEQ,
-      injection HEEQ with HEEQUB HEEQ,
-      injection HEEQ with HEEQ HEEQP,
+      cases HEEQ with HEEQUB HEEQ,
+      cases HEEQ with HEEQ HEEQP,
       rw poisonty_and_ff_op at HEEQP,
       rw poisonty_and_ff2_op at HEEQP,
       rw HEEQP at HENOPOISON, cases HENOPOISON
@@ -1288,8 +1291,8 @@ lemma bop_exec_nonpoison_implies: ∀ (sz:size) bopc flags ea eap eb ebp
     any_goals {
       unfold bop at HEEQ,
       simp at HEEQ,
-      injection HEEQ with HEEQUB HEEQ,
-      injection HEEQ with HEEQ HEEQP,
+      cases HEEQ with HEEQUB HEEQ,
+      cases HEEQ with HEEQ HEEQP,
       try { rw poisonty_and_ff_op at HEEQP },
       try { rw poisonty_and_ff2_op at HEEQP },
       try { rw poisonty_and_ff2_op at HEEQP },
@@ -1317,10 +1320,11 @@ lemma bop_equiv: ∀ (szs sze:size) bopc flags (sa:sbitvec szs) sap sb sbp
   intros,
   unfold bop at *,
   simp at HSEQ HEEQ,
-  injection HSEQ with HSEQUB HSEQVP,
-  injection HSEQVP with HSEQV HSEQP,
-  injection HEEQ with HEEQUB HEEQVP,
-  injection HEEQVP with HEEQV HEEQP,
+  have HEEQ := HEEQ,
+  cases HSEQ with HSEQUB HSEQVP,
+  cases HSEQVP with HSEQV HSEQP,
+  cases HEEQ with HEEQUB HEEQVP,
+  cases HEEQVP with HEEQV HEEQP,
 
   split,
   {-- ub equivance
@@ -1376,8 +1380,10 @@ lemma bop_equiv: ∀ (szs sze:size) bopc flags (sa:sbitvec szs) sap sb sbp
     { -- If there's no UB and poison, the result values are equiv.
       have HNOPOISON: eap = tt ∧ ebp = tt, {
         apply bop_exec_nonpoison_implies,
-        apply HEEQ,
-        { rw HNOUB at HEEQUB, assumption },
+        unfold bop,
+        unfold bool_like.tt at HNOUB,
+        apply HNOUB,
+        rw ← HEEQP,
         refl
       },
       cases HNOPOISON with HNOPOISON_A HNOPOISON_B,

@@ -66,8 +66,7 @@ lemma never_poison:
       any_goals {
         -- if dividend was poison or previous state was ub..
         unfold_coes at HSTEP', unfold has_and.and at HSTEP',
-        unfold bool_like.and at HSTEP', simp at HSTEP', injection HSTEP' with HH _,
-        injection HH },
+        unfold bool_like.and at HSTEP', simp at HSTEP', cases HSTEP' with HH _ },
       { simp }
     }
   },

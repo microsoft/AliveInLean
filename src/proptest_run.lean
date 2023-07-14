@@ -103,6 +103,13 @@ meta def b_equiv_cons: list expr :=
   [ `(@spec.b_equiv.tt),
     `(@spec.b_equiv.ff),
     `(@spec.b_equiv.and1),
+    -- ∀ (s1 s2:sbool) (b1 b2:bool),
+    --     b_equiv s1 b1 → (b1 = tt → b_equiv s2 b2) → b_equiv (s1.and s2) (band b1 b2)
+    -- =>
+    -- (assume that we randomly assigned b1 := tt, b2 := ff)
+    -- ∀ (s1 s2:sbool),
+    --      b_equiv s1 tt → (tt = tt → b_equiv s2 ff) → b_equiv (s1.and s2) (ff)
+    -- .. then this is turned into SMT formula & checked by Z3
     `(@spec.b_equiv.and2),
     `(@spec.b_equiv.or1),
     `(@spec.b_equiv.or2),

@@ -19,21 +19,40 @@ namespace spec
 open irsem
 open freevar
 
+-- An SMT bit-vector expression bv is closed if it does not have a (free) SMT variable.
+--
+-- (bvadd x 1) is not closed because it has a free variable 'x'
+-- (bvadd 1 2) is closed because it does not have that.
+--
+-- We define closedness as follows: for any given mapping η, replacing the free
+--   variable with any value (η⟦bv⟧) does not change the expression.
 def closed_bv {sz:size} (bv:sbitvec sz) := ∀ (η:freevar.env), η⟦bv⟧ = bv
+
+-- Same definition for boolean SMT expressions too.
 def closed_b (b:sbool) := ∀ (η:freevar.env), η⟦b⟧ = b
+
 def closed_valty (v:valty irsem_smt) := ∀ (η:freevar.env), η⟦v⟧ = v
 def closed_regfile (rf:regfile irsem_smt) :=
   ∀ (η:freevar.env), rf.apply_to_values irsem_smt (η.replace_valty) = rf
 def closed_irstate (ss:irstate irsem_smt) := ∀ (η:freevar.env), η⟦ss⟧ = ss
 
 
+-- An interesting lemma about closedness:
+-- Given an SMT bit-vector expression sb and LEAN bitvector value bv
+--   and environment η,
+-- If (1) η⟦sb⟧ is equivalent to bv, and (2) sb has no free variable,
+-- then sb and bv are also equivalent.  
 lemma closed_bv_equiv: ∀ {sz:size} (η:freevar.env)
     (sb:sbitvec sz) (bv:bitvector sz)
-    (HEQ:bv_equiv (η⟦sb⟧) bv)
+    (HEQ2:bv_equiv (η⟦sb⟧) bv)
     (HC:closed_bv sb),
   bv_equiv sb bv
 := begin
-  intros, unfold closed_bv at HC, have HC := HC η, rw HC at HEQ, assumption
+  intros,
+  unfold closed_bv at HC,
+  have HC' := HC η,
+  rw HC' at HEQ2,
+  assumption
 end
 
 lemma closed_b_equiv: ∀ (η:freevar.env)
@@ -113,14 +132,14 @@ lemma closed_irstate_split: ∀ ub rf,
     intros H,
     split,
     any_goals {
-      intros, have H' := H η, injection H'
+      intros, have H' := H η, cases H',tauto
     }
   },
   {
     intros H,
     cases H,
     intros,
-    rw [H_left, H_right]
+    rw [H_left, H_right],tauto
   }
 end
 
@@ -138,6 +157,10 @@ lemma closed_irstate_empty: closed_irstate (irstate.empty irsem_smt)
   intros, refl
 end
 
+-- This lemma says that, for example, since
+-- {x |-> tt}[[x]] (which is simply tt) is closed
+--                 where x is an SMT boolean variable,
+-- {x |-> tt, n |-> v}[[x]] is also closed.
 lemma closed_b_var_add: ∀ (η:freevar.env) (n:string) (v:bool) (s:string)
     (HC: closed_b (η⟦sbool.var s⟧)),
   closed_b ((env.add_b η n v)⟦sbool.var s⟧)
@@ -148,14 +171,21 @@ lemma closed_b_var_add: ∀ (η:freevar.env) (n:string) (v:bool) (s:string)
   intros,
   generalize Hb': (η.b s) = b',
   rw Hb' at *,
-  have Heq: decidable (s = n), apply_instance,
-  cases Heq,
-  { rw if_neg, assumption, assumption },
-  {
-    rw if_pos,
-    unfold env.replace_sb._match_1 at *,
-    cases v; unfold closed_b; intros; refl,
-    assumption
+  -- LEAN is based on Calculus of Inductive Construction, which cannot prove
+  -- excluded middle (∀x, P x \/ ¬ P x) in general. (If you prove it, then I bet
+  -- you will be really famous)
+  -- However, if P is decidable (meaning that it has a concrete computing function
+  -- that yields either true or false), then now you can use excluded middle.
+  have Heq: decidable (s = n),
+  { apply_instance }, -- Prove that there exists the computing function for s = n
+  { cases Heq,
+    { rw if_neg, assumption, assumption },
+    {
+      rw if_pos,
+      unfold env.replace_sb._match_1 at *,
+      cases v; unfold closed_b; intros; refl,
+      assumption
+    }
   }
 end
 
@@ -171,6 +201,7 @@ lemma closed_b_var_add2: ∀ (η:freevar.env) (v:bool) (s:string),
   intros, cases v, refl, refl
 end
 
+-- This lemma is similar to closed_b_var_add
 lemma closed_bv_var_add: ∀ (η:freevar.env) sz (n:string) v (s:string)
     (HC: closed_bv (η⟦sbitvec.var sz s⟧)),
   closed_bv ((env.add_bv η n v)⟦sbitvec.var sz s⟧)

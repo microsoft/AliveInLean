@@ -9,10 +9,12 @@ import smt2.builder
 
 universes u
 
+-- sbool: Boolean SMT formula
+-- sbitvec: Bit-vector SMT formula (takes its bitwidth)
 mutual inductive sbool, sbitvec
 with sbool : Type
 | tt: sbool | ff:sbool
-| var: string → sbool -- unbound variable
+| var: string → sbool -- SMT variable
 | and: sbool → sbool → sbool
 | or: sbool → sbool → sbool
 | xor: sbool → sbool → sbool
@@ -28,7 +30,7 @@ with sbool : Type
 | ult: Π {sz:size}, sbitvec sz → sbitvec sz → sbool
 with sbitvec : size → Type
 | const: Π (sz:size) (n:nat), sbitvec sz
-| var: Π (sz:size), string → sbitvec sz -- unbound variable
+| var: Π (sz:size), string → sbitvec sz -- SMT variable
 | add: Π {sz:size}, sbitvec sz → sbitvec sz → sbitvec sz
 | sub: Π {sz:size}, sbitvec sz → sbitvec sz → sbitvec sz
 | mul: Π {sz:size}, sbitvec sz → sbitvec sz → sbitvec sz
@@ -127,7 +129,8 @@ end
 theorem decr_sbitvec: ∀ (sz:size) (v:sbitvec sz), 0 < sbitvec.sizeof sz v
 := begin
   intros, induction v,
-  any_goals { unfold sbitvec.sizeof, try {simp}, rw nat.one_add, exact dec_trivial }
+  any_goals { unfold sbitvec.sizeof },
+  any_goals { try {simp}, rw nat.one_add, exact dec_trivial }
 end
 
 variable {sz:size}

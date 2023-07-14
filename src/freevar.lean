@@ -95,19 +95,26 @@ def create_init_state_smt (freevars:list (string × ty)): irstate irsem_smt :=
     freevars
 
 
+-- env η is a mapping from SMT variables to their concrete values.
+-- It has two fields: one (bv) for bit-vector SMT variables, and another (b) for
+-- boolean SMT variables.
 structure env :=
-  (bv:string → option int) -- similar to pair type
+  (bv:string → option int)
   (b:string → option bool)
 
 namespace env
+  -- An empty environment
   def empty : env := { bv := (λ n, none), b := λ n, none }
 
+  -- Two functions for adding (name |-> v) to env.
   def add_bv (e:env) (name:string) (v:ℤ):env :=
     {bv := (λ n, if n = name then some v else e.bv n), b := e.b}
 
   def add_b (e:env) (name:string) (b:bool):env :=
     {bv := e.bv, b := (λ n, if n = name then some b else e.b n)}
 
+  -- Given an SMT formula, replace all free variables with the concrete
+  -- value assignments of the environment η. 
   @[simp]
   mutual def replace_sbv, replace_sb
   with replace_sbv: Π (η:env) {sz:size}, sbitvec sz → sbitvec sz
@@ -151,6 +158,9 @@ namespace env
   | η sz (sbitvec.extract hb lb H y) :=
     sbitvec.extract hb lb H (replace_sbv η y)
   | η sz (sbitvec.ite c x y) :=
+    -- These conditions are necessary to guarantee that recursive functions
+    -- replace_sbv, replace_sb are terminating. This is done by defining some
+    -- measurement that is strictly decreasing after each recursive call.
     have 2 < (1 + (1 + (1 + (1 + (sbitvec.sizeof sz y + sbitvec.sizeof sz x))))),
       by repeat { rw nat.one_add }; exact dec_trivial,
     have 2 < (1 + (1 + (1 + (1 + (sbitvec.sizeof sz x + sbitvec.sizeof sz y))))),

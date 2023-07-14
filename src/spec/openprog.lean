@@ -118,9 +118,9 @@ lemma bop_replace: ∀ sz bopc flags η v1 p1 v2 p2 ubres vres pres
   intros,
   unfold bop at *,
   simp at *,
-  injection H with HUB H,
-  injection H with HV HPOISON,
-  congr,
+  cases H with HUB H,
+  cases H with HV HPOISON,
+  split,
   {
     rw HUB,
     unfold bop_ub,
@@ -147,6 +147,7 @@ lemma bop_replace: ∀ sz bopc flags η v1 p1 v2 p2 ubres vres pres
       { unfold uint_like.zero, unfold sbitvec.zero, rw env.replace_sbv_of_int }
     }
   },
+  split,
   {
     rw HV,
     cases bopc,
@@ -268,24 +269,15 @@ lemma icmpop_replace: ∀ sz cond η v1 p1 v2 p2 vres pres
     unfold icmpop at *,
     simp at *,
     unfold icmpop._match_1 at *,
-    injection H,
+    cases H with h_1 h_2,
     rw h_1,
     rw h_2,
     rw env.replace_sb_and,
     unfold_coes,
     rw env.replace_sbv_of_bool,
-    unfold_ops
-  },
-  { rw env.replace_sb_eqbv },
-  { rw env.replace_sb_nebv },
-  { rw env.replace_sb_ult },
-  { rw env.replace_sb_ule },
-  { rw env.replace_sb_ult },
-  { rw env.replace_sb_ule },
-  { rw env.replace_sb_slt },
-  { rw env.replace_sb_sle },
-  { rw env.replace_sb_slt },
-  { rw env.replace_sb_sle }
+    unfold_ops,
+    simp
+  }
 end
 
 lemma step_icmpop_replace: ∀ (ss:irstate_smt) cond
@@ -335,11 +327,11 @@ lemma selectop_replace: ∀ sz η vcond pcond v1 p1 v2 p2 vres pres
   intros,
   unfold selectop at *,
   simp at *,
-  injection H,
+  cases H with h_1 h_2,
   rw [h_1, h_2],
   unfold has_ite.ite,
   unfold has_eq.eq, unfold has_comp.eq,
-  congr,
+  split,
   {
     rw env.replace_sbv_ite,
     rw env.replace_sb_eqbv,

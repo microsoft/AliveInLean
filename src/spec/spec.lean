@@ -16,16 +16,22 @@ import system.io
 
 namespace spec
 
--- This inductive predicate is needed to formally define
--- the relation between sbitvec ops and bitvector ops.
--- This can be used to prove ex. ∀ s b, equiv s b → equiv (optimize s) b
-
+-- This inductive predicate formally defines the equality relation between
+-- SMT expressions and LEAN values.
+-- bool is LEAN's datatype, and sbool is the SMT boolean expression defined in AliveInLean.
+-- bool.tt is LEAN's true, bool.ff is LEAN's false.
 mutual inductive b_equiv, bv_equiv
 with b_equiv : sbool → bool → Prop
+
+-- SMT's true constant is equivalent to LEAN's true.
 | tt: b_equiv sbool.tt bool.tt
 
 | ff: b_equiv sbool.ff bool.ff
 
+-- In the semantics of 'and', short-circuiting was necessary because
+-- the former version (2.5) of SMT-LIB defined x / 0 as "undefined".
+-- This short-circuiting enables defining this expression as 'false':
+--   (and ff (= (bvudiv 1 0) ...)) must be false
 | and1: ∀ (s1 s2:sbool) (b1 b2:bool),
     b_equiv s1 b1 → (b1 = tt → b_equiv s2 b2) → b_equiv (s1.and s2) (band b1 b2)
 
@@ -67,6 +73,7 @@ with b_equiv : sbool → bool → Prop
     bv_equiv s1 b1 → bv_equiv s2 b2 → b_equiv (sbool.sle s1 s2) (bitvector.sle b1 b2)
 
 
+-- Relates sbitvec and bitvector where bitvector is a LEAN value.
 with bv_equiv : Π {sz:size}, sbitvec sz → bitvector sz → Prop
 | const: ∀ {sz:size} (n:nat) (H:n < 2^sz.val), bv_equiv
         (sbitvec.const sz n) ⟨n, H⟩

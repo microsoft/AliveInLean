@@ -559,7 +559,7 @@ lemma env.replace_sb_overflowchk_shl: ∀
   unfold sbitvec.overflow_chk,
   cases nsw; simp,
   { repeat { rw env.replace_sbv_of_int }, tauto },
-  { rw env.replace_sbv_of_int, tauto }
+  { rw env.replace_sbv_of_int }
 end
 
 -- irstate
@@ -607,16 +607,18 @@ lemma getreg_replace: ∀ {ss:irstate_smt} {name:string} {η:freevar.env} {ov}
   },
   {
     intros rf Hind n v ov H,
-    unfold irstate.setub, simp at *,
+    unfold irstate.setub at *, simp at *,
     rw regfile.apply_update_comm,
     have HNAME: decidable (n = name), apply_instance,
     cases HNAME,
     {
       rw regfile.update_get_nomatch,
-      apply Hind,
-      { rw regfile.update_get_nomatch at H, apply H,
-        apply neq_symm, assumption },
-      { apply neq_symm, assumption }
+      rw regfile.update_get_nomatch at H,
+      unfold irstate.setub at Hind,
+      simp at Hind,
+      rw H at Hind,
+      assumption,
+      tauto, tauto
     },
     {
       rw regfile.update_get_match,
@@ -649,7 +651,7 @@ lemma replace_updateub: ∀ (ss:irstate_smt) (η:freevar.env) ub,
   unfold irstate.setub,
   unfold irstate.getub,
   simp,
-  congr, rw env.replace_sb_and
+  rw env.replace_sb_and
 end
 
 lemma replace_getub: ∀ (ss:irstate_smt) (η:freevar.env),
@@ -671,11 +673,9 @@ lemma empty_replace_st: ∀ (ss:irstate_smt),
   unfold irstate.setub,
   unfold irstate.getub,
   simp,
-  rw prod_inj,
   split,
   { rw env.empty_replace_sb },
   {
-    simp,
     revert ss_snd,
     apply regfile.induction,
     { rw regfile.empty_apply_empty },
@@ -1238,8 +1238,8 @@ lemma env.not_in_add_bv_irstate_comm: ∀ (η:freevar.env) (ss:irstate irsem_smt
   unfold irstate.apply_to_values,
   unfold regfile.apply_to_values,
   simp,
-  rw prod_inj,
-  simp,
+  --rw prod_inj,
+  --simp,
   split,
   {
     rw env.not_in_add_bv_b_comm, assumption
@@ -1275,8 +1275,8 @@ lemma env.not_in_add_b_irstate_comm: ∀ (η:freevar.env) (ss:irstate irsem_smt)
   unfold irstate.apply_to_values,
   unfold regfile.apply_to_values,
   simp,
-  rw prod_inj,
-  simp,
+  --rw prod_inj,
+  --simp,
   split,
   {
     rw env.not_in_add_b_b_comm, assumption
